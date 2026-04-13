@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es-AR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0e0e0e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Depósito ML">
+<title>Panel de Reparto · Depósito</title>
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --surface3: #2e2e2e;
+    --border: #2e2e2e;
+    --text1: #f0f0f0;
+    --text2: #aaaaaa;
+    --text3: #555555;
+    --green: #25c490;
+    --green-bg: #0d2e22;
+    --green-dk: #25c490;
+    --amber: #e89b2a;
+    --amber-bg: #2d1f0a;
+    --red: #e05555;
+    --red-bg: #2e1111;
+    --red-md: #e05555;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text1);
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100dvh;
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    padding: 0;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 20px 16px;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+    animation: pulse-glow 2.2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(37,196,144,0.6); }
+    50% { box-shadow: 0 0 0 6px rgba(37,196,144,0); }
+  }
+
+  .header-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    flex: 1;
+  }
+
+  .header-live {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse-dot 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 5px;
+    padding-left: 20px;
+  }
+
+  /* BODY */
+  .dash-body {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+  }
+
+  /* METRIC CARDS */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .metric-card.green { border-color: rgba(37,196,144,0.3); background: var(--green-bg); }
+  .metric-card.amber { border-color: rgba(232,155,42,0.3); background: var(--amber-bg); }
+  .metric-card.red { border-color: rgba(224,85,85,0.3); background: var(--red-bg); }
+
+  .metric-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    color: var(--text2);
+  }
+  .metric-card.green .metric-label { color: var(--green); }
+  .metric-card.amber .metric-label { color: var(--amber); }
+  .metric-card.red .metric-label { color: var(--red); }
+
+  .metric-num {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1.5px;
+    color: var(--text1);
+  }
+
+  /* PROGRESS */
+  .progress-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .progress-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    color: var(--text2);
+  }
+
+  .progress-pct {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text1);
+  }
+
+  .progress-track {
+    height: 12px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+    display: flex;
+    gap: 2px;
+  }
+
+  .prog-green {
+    height: 100%;
+    background: var(--green);
+    border-radius: 99px;
+    transition: width 0.6s ease;
+    min-width: 0;
+  }
+
+  .prog-red {
+    height: 100%;
+    background: var(--red);
+    border-radius: 99px;
+    transition: width 0.6s ease;
+    min-width: 0;
+  }
+
+  .progress-fraction {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  .progress-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* ZONE CARD */
+  .section-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    color: var(--text3);
+    padding-left: 4px;
+  }
+
+  .zone-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+
+  .zone-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text1);
+    margin-bottom: 10px;
+  }
+
+  .zone-mini-track {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 8px;
+  }
+
+  .zone-prog-g {
+    height: 100%;
+    background: var(--green);
+    border-radius: 99px;
+    transition: width 0.6s ease;
+  }
+
+  .zone-prog-r {
+    height: 100%;
+    background: var(--red);
+    border-radius: 99px;
+    transition: width 0.6s ease;
+  }
+
+  .zone-stats {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .zone-stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  .zone-stat-num {
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .zone-stat-num.green { color: var(--green); }
+  .zone-stat-num.red { color: var(--red); }
+  .zone-stat-num.amber { color: var(--amber); }
+
+  /* LAST ACTION */
+  .last-action-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 60px;
+    transition: border-color 0.3s;
+  }
+
+  .last-action-card.delivered { border-color: rgba(37,196,144,0.4); }
+  .last-action-card.failed { border-color: rgba(224,85,85,0.4); }
+
+  .last-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .last-icon.delivered { background: var(--green-bg); color: var(--green); }
+  .last-icon.failed { background: var(--red-bg); color: var(--red); }
+
+  .last-info { flex: 1; }
+  .last-status {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text1);
+  }
+  .last-time {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+  .last-empty {
+    font-size: 13px;
+    color: var(--text3);
+    font-style: italic;
+  }
+
+  /* FOOTER */
+  .footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .footer-ts {
+    font-size: 11px;
+    color: var(--text3);
+    flex: 1;
+  }
+
+  .conn-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 99px;
+    border: 1px solid;
+  }
+
+  .conn-badge.connected {
+    color: var(--green);
+    border-color: rgba(37,196,144,0.3);
+    background: var(--green-bg);
+  }
+
+  .conn-badge.disconnected {
+    color: var(--red);
+    border-color: rgba(224,85,85,0.3);
+    background: var(--red-bg);
+  }
+
+  .conn-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* WAITING STATE */
+  .waiting-msg {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--text3);
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  /* BUMP ANIMATION */
+  @keyframes bump {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+  .bumping {
+    animation: bump 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="header-dot"></div>
+      <div class="header-title">Panel de Reparto</div>
+      <div class="header-live">
+        <div class="live-dot"></div>
+        En vivo
+      </div>
+    </div>
+    <div class="header-sub" id="header-date">Cargando...</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="dash-body">
+    <!-- METRICS -->
+    <div class="metrics-grid">
+      <div class="metric-card green">
+        <div class="metric-label">Entregados</div>
+        <div class="metric-num" id="m-delivered">—</div>
+      </div>
+      <div class="metric-card amber">
+        <div class="metric-label">Pendientes</div>
+        <div class="metric-num" id="m-pending">—</div>
+      </div>
+      <div class="metric-card red">
+        <div class="metric-label">No entreg.</div>
+        <div class="metric-num" id="m-failed">—</div>
+      </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-card">
+      <div class="progress-header">
+        <div class="progress-title">Progreso total</div>
+        <div class="progress-pct" id="prog-pct">—%</div>
+      </div>
+      <div class="progress-track">
+        <div class="prog-green" id="prog-green" style="width:0%"></div>
+        <div class="prog-red" id="prog-red" style="width:0%"></div>
+      </div>
+      <div class="progress-fraction" id="prog-fraction">Esperando datos del chofer...</div>
+      <div class="progress-legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--green)"></div>
+          Entregados
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--red)"></div>
+          No entregados
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border)"></div>
+          Pendientes
+        </div>
+      </div>
+    </div>
+
+    <!-- ZONE -->
+    <div class="section-title">Por zona</div>
+    <div class="zone-card">
+      <div class="zone-name">📍 Florencio Varela / Berazategui</div>
+      <div class="zone-mini-track">
+        <div class="zone-prog-g" id="zone-pg" style="width:0%"></div>
+        <div class="zone-prog-r" id="zone-pr" style="width:0%"></div>
+      </div>
+      <div class="zone-stats">
+        <div class="zone-stat">
+          <span class="zone-stat-num green" id="z-d">—</span>
+          <span>entregados</span>
+        </div>
+        <div class="zone-stat">
+          <span class="zone-stat-num red" id="z-f">—</span>
+          <span>no entreg.</span>
+        </div>
+        <div class="zone-stat">
+          <span class="zone-stat-num amber" id="z-p">—</span>
+          <span>pendientes</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAST ACTION -->
+    <div class="section-title">Última acción</div>
+    <div class="last-action-card" id="last-card">
+      <div class="last-empty">Esperando acciones del chofer...</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-ts" id="footer-ts">Sin datos aún</div>
+    <div class="conn-badge connected" id="conn-badge">
+      <div class="conn-dot"></div>
+      Conectado
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC8SLmgOK2LfnzK-PiZQKCl9WdVfO4ISys",
+  authDomain: "chofer-ml.firebaseapp.com",
+  databaseURL: "https://chofer-ml-default-rtdb.firebaseio.com",
+  projectId: "chofer-ml",
+  storageBucket: "chofer-ml.firebasestorage.app",
+  messagingSenderId: "648556111731",
+  appId: "1:648556111731:web:298b201b8b9f0f5c47c706"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const ZONE_KEY = 'florencio-varela-berazategui';
+
+function todayStr() {
+  return new Date().toLocaleDateString('es-AR', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+    year: 'numeric', month: '2-digit', day: '2-digit'
+  }).split('/').reverse().join('-');
+}
+
+function todayFmt() {
+  return new Date().toLocaleDateString('es-AR', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+    weekday: 'long', day: 'numeric', month: 'long'
+  });
+}
+
+function fmtTime(isoStr) {
+  if (!isoStr) return '';
+  return new Date(isoStr).toLocaleTimeString('es-AR', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  });
+}
+
+document.getElementById('header-date').textContent = todayFmt();
+
+// Track previous values to detect last action
+let prev = { delivered: null, failed: null };
+
+const zoneRef = ref(db, `jornadas/${todayStr()}/${ZONE_KEY}`);
+
+onValue(zoneRef, (snapshot) => {
+  setConnected(true);
+
+  if (!snapshot.exists()) {
+    return; // still showing defaults
+  }
+
+  const data = snapshot.val();
+  const { total = 0, delivered = 0, failed = 0, pending = 0, updatedAt } = data;
+  const managed = delivered + failed;
+  const pct = total > 0 ? Math.round((managed / total) * 100) : 0;
+
+  // Detect last action
+  let lastType = null;
+  if (prev.delivered !== null) {
+    if (delivered > prev.delivered) lastType = 'delivered';
+    else if (failed > prev.failed) lastType = 'failed';
+  }
+  prev.delivered = delivered;
+  prev.failed = failed;
+
+  // Update metrics
+  setVal('m-delivered', delivered, lastType === 'delivered');
+  setVal('m-pending', pending, lastType !== null);
+  setVal('m-failed', failed, lastType === 'failed');
+
+  // Progress
+  const pctG = total > 0 ? (delivered / total * 100) : 0;
+  const pctR = total > 0 ? (failed / total * 100) : 0;
+  document.getElementById('prog-green').style.width = pctG + '%';
+  document.getElementById('prog-red').style.width = pctR + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fraction').textContent = `${managed} de ${total} gestionados`;
+
+  // Zone
+  document.getElementById('zone-pg').style.width = pctG + '%';
+  document.getElementById('zone-pr').style.width = pctR + '%';
+  setVal('z-d', delivered);
+  setVal('z-f', failed);
+  setVal('z-p', pending);
+
+  // Last action
+  if (lastType || (updatedAt && managed > 0)) {
+    const typeToShow = lastType || sessionStorage.getItem('last_action_type') || 'delivered';
+    if (lastType) sessionStorage.setItem('last_action_type', lastType);
+    const isD = typeToShow === 'delivered';
+    const card = document.getElementById('last-card');
+    card.className = `last-action-card ${typeToShow}`;
+    card.innerHTML = `
+      <div class="last-icon ${typeToShow}">${isD ? '✓' : '✕'}</div>
+      <div class="last-info">
+        <div class="last-status" style="color:${isD ? 'var(--green)' : 'var(--red)'}">
+          ${isD ? 'Entregado' : 'No entregado'}
+        </div>
+        <div class="last-time">${fmtTime(updatedAt)}</div>
+      </div>
+    `;
+  }
+
+  // Footer
+  document.getElementById('footer-ts').textContent =
+    'Actualizado ' + fmtTime(updatedAt || new Date().toISOString());
+
+}, (error) => {
+  console.error('Firebase error:', error);
+  setConnected(false);
+});
+
+function setVal(id, val, doBump) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = val;
+  if (doBump) {
+    el.classList.remove('bumping');
+    void el.offsetWidth;
+    el.classList.add('bumping');
+    el.addEventListener('animationend', () => el.classList.remove('bumping'), { once: true });
+  }
+}
+
+function setConnected(ok) {
+  const badge = document.getElementById('conn-badge');
+  badge.className = `conn-badge ${ok ? 'connected' : 'disconnected'}`;
+  badge.innerHTML = `<div class="conn-dot"></div>${ok ? 'Conectado' : 'Sin conexión'}`;
+}
+</script>
+</body>
+</html>
