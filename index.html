@@ -11,455 +11,111 @@
 <title>Panel de Reparto · Depósito</title>
 <style>
   :root {
-    --bg: #0e0e0e;
-    --surface: #1a1a1a;
-    --surface2: #242424;
-    --surface3: #2e2e2e;
-    --border: #2e2e2e;
-    --text1: #f0f0f0;
-    --text2: #aaaaaa;
-    --text3: #555555;
-    --green: #25c490;
-    --green-bg: #0d2e22;
-    --green-dk: #25c490;
-    --amber: #e89b2a;
-    --amber-bg: #2d1f0a;
-    --red: #e05555;
-    --red-bg: #2e1111;
-    --red-md: #e05555;
-    --radius: 14px;
-    --radius-sm: 8px;
-    --shadow: 0 2px 12px rgba(0,0,0,0.4);
+    --bg:#0e0e0e;--surface:#1a1a1a;--surface2:#242424;--surface3:#2e2e2e;--border:#2e2e2e;
+    --text1:#f0f0f0;--text2:#aaaaaa;--text3:#555555;
+    --green:#25c490;--green-bg:#0d2e22;--amber:#e89b2a;--amber-bg:#2d1f0a;
+    --red:#e05555;--red-bg:#2e1111;--radius:14px;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  html, body {
-    background: var(--bg);
-    color: var(--text1);
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    min-height: 100dvh;
-  }
-
-  .page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100dvh;
-    padding: 0;
-  }
-
-  /* HEADER */
-  .header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 18px 20px 16px;
-  }
-
-  .header-top {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .header-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--green);
-    flex-shrink: 0;
-    animation: pulse-glow 2.2s ease-in-out infinite;
-  }
-
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(37,196,144,0.6); }
-    50% { box-shadow: 0 0 0 6px rgba(37,196,144,0); }
-  }
-
-  .header-title {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.4px;
-    flex: 1;
-  }
-
-  .header-live {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--green);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-  }
-
-  .live-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    animation: pulse-dot 1.8s ease-in-out infinite;
-  }
-
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  .header-sub {
-    font-size: 13px;
-    color: var(--text2);
-    margin-top: 5px;
-    padding-left: 20px;
-  }
-
-  /* BODY */
-  .dash-body {
-    flex: 1;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    overflow-y: auto;
-  }
-
-  /* METRIC CARDS */
-  .metrics-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-  }
-
-  .metric-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 10px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .metric-card.green { border-color: rgba(37,196,144,0.3); background: var(--green-bg); }
-  .metric-card.amber { border-color: rgba(232,155,42,0.3); background: var(--amber-bg); }
-  .metric-card.red { border-color: rgba(224,85,85,0.3); background: var(--red-bg); }
-
-  .metric-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    font-weight: 600;
-    color: var(--text2);
-  }
-  .metric-card.green .metric-label { color: var(--green); }
-  .metric-card.amber .metric-label { color: var(--amber); }
-  .metric-card.red .metric-label { color: var(--red); }
-
-  .metric-num {
-    font-size: 42px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -1.5px;
-    color: var(--text1);
-  }
-
-  /* PROGRESS */
-  .progress-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-  }
-
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-
-  .progress-title {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    font-weight: 600;
-    color: var(--text2);
-  }
-
-  .progress-pct {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text1);
-  }
-
-  .progress-track {
-    height: 12px;
-    background: var(--surface2);
-    border-radius: 99px;
-    overflow: hidden;
-    display: flex;
-    gap: 2px;
-  }
-
-  .prog-green {
-    height: 100%;
-    background: var(--green);
-    border-radius: 99px;
-    transition: width 0.6s ease;
-    min-width: 0;
-  }
-
-  .prog-red {
-    height: 100%;
-    background: var(--red);
-    border-radius: 99px;
-    transition: width 0.6s ease;
-    min-width: 0;
-  }
-
-  .progress-fraction {
-    font-size: 12px;
-    color: var(--text2);
-    margin-top: 8px;
-    text-align: center;
-  }
-
-  .progress-legend {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 10px;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    color: var(--text2);
-  }
-
-  .legend-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-  }
-
-  /* ZONE CARD */
-  .section-title {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-weight: 600;
-    color: var(--text3);
-    padding-left: 4px;
-  }
-
-  .zone-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-  }
-
-  .zone-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text1);
-    margin-bottom: 10px;
-  }
-
-  .zone-mini-track {
-    height: 6px;
-    background: var(--surface2);
-    border-radius: 99px;
-    overflow: hidden;
-    display: flex;
-    margin-bottom: 8px;
-  }
-
-  .zone-prog-g {
-    height: 100%;
-    background: var(--green);
-    border-radius: 99px;
-    transition: width 0.6s ease;
-  }
-
-  .zone-prog-r {
-    height: 100%;
-    background: var(--red);
-    border-radius: 99px;
-    transition: width 0.6s ease;
-  }
-
-  .zone-stats {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .zone-stat {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--text2);
-  }
-
-  .zone-stat-num {
-    font-weight: 700;
-    font-size: 14px;
-  }
-  .zone-stat-num.green { color: var(--green); }
-  .zone-stat-num.red { color: var(--red); }
-  .zone-stat-num.amber { color: var(--amber); }
-
-  /* LAST ACTION */
-  .last-action-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-height: 60px;
-    transition: border-color 0.3s;
-  }
-
-  .last-action-card.delivered { border-color: rgba(37,196,144,0.4); }
-  .last-action-card.failed { border-color: rgba(224,85,85,0.4); }
-
-  .last-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .last-icon.delivered { background: var(--green-bg); color: var(--green); }
-  .last-icon.failed { background: var(--red-bg); color: var(--red); }
-
-  .last-info { flex: 1; }
-  .last-status {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text1);
-  }
-  .last-time {
-    font-size: 12px;
-    color: var(--text2);
-    margin-top: 2px;
-  }
-  .last-empty {
-    font-size: 13px;
-    color: var(--text3);
-    font-style: italic;
-  }
-
-  /* FOOTER */
-  .footer {
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .footer-ts {
-    font-size: 11px;
-    color: var(--text3);
-    flex: 1;
-  }
-
-  .conn-badge {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 99px;
-    border: 1px solid;
-  }
-
-  .conn-badge.connected {
-    color: var(--green);
-    border-color: rgba(37,196,144,0.3);
-    background: var(--green-bg);
-  }
-
-  .conn-badge.disconnected {
-    color: var(--red);
-    border-color: rgba(224,85,85,0.3);
-    background: var(--red-bg);
-  }
-
-  .conn-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-
-  /* WAITING STATE */
-  .waiting-msg {
-    text-align: center;
-    padding: 32px 20px;
-    color: var(--text3);
-    font-size: 14px;
-    font-style: italic;
-  }
-
-  /* BUMP ANIMATION */
-  @keyframes bump {
-    0% { transform: scale(1); }
-    40% { transform: scale(1.15); }
-    100% { transform: scale(1); }
-  }
-  .bumping {
-    animation: bump 0.35s cubic-bezier(0.34,1.56,0.64,1);
-  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100dvh}
+  .page{display:flex;flex-direction:column;min-height:100dvh}
+  .header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px 14px;position:sticky;top:0;z-index:10}
+  .header-top{display:flex;align-items:center;gap:10px}
+  .header-dot{width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse-glow 2.2s ease-in-out infinite}
+  @keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(37,196,144,0.6)}50%{box-shadow:0 0 0 6px rgba(37,196,144,0)}}
+  .header-title{font-size:20px;font-weight:700;letter-spacing:-0.4px;flex:1}
+  .header-live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.6px}
+  .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 1.8s ease-in-out infinite}
+  @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.3}}
+  .header-sub{font-size:13px;color:var(--text2);margin-top:5px;padding-left:20px}
+  .active-zone-banner{background:var(--green-bg);border-bottom:1px solid rgba(37,196,144,0.25);padding:8px 20px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--green)}
+  .active-zone-banner.hidden{display:none}
+  .zone-pulse{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse-dot 1.4s ease-in-out infinite}
+  .dash-body{flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+  .section-title{font-size:11px;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;color:var(--text3);padding-left:4px}
+  .metrics-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;display:flex;flex-direction:column;gap:5px}
+  .metric-card.green{border-color:rgba(37,196,144,0.3);background:var(--green-bg)}
+  .metric-card.amber{border-color:rgba(232,155,42,0.3);background:var(--amber-bg)}
+  .metric-card.red{border-color:rgba(224,85,85,0.3);background:var(--red-bg)}
+  .metric-label{font-size:10px;text-transform:uppercase;letter-spacing:0.6px;font-weight:600}
+  .metric-card.green .metric-label{color:var(--green)}.metric-card.amber .metric-label{color:var(--amber)}.metric-card.red .metric-label{color:var(--red)}
+  .metric-num{font-size:42px;font-weight:700;line-height:1;letter-spacing:-1.5px;color:var(--text1)}
+  .progress-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .progress-title{font-size:12px;text-transform:uppercase;letter-spacing:0.6px;font-weight:600;color:var(--text2)}
+  .progress-pct{font-size:20px;font-weight:700;color:var(--text1)}
+  .progress-track{height:12px;background:var(--surface2);border-radius:99px;overflow:hidden;display:flex;gap:2px}
+  .prog-green{height:100%;background:var(--green);border-radius:99px;transition:width 0.6s ease;min-width:0}
+  .prog-red{height:100%;background:var(--red);border-radius:99px;transition:width 0.6s ease;min-width:0}
+  .progress-fraction{font-size:12px;color:var(--text2);margin-top:8px;text-align:center}
+  .progress-legend{display:flex;justify-content:center;gap:16px;margin-top:10px}
+  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
+  .legend-dot{width:8px;height:8px;border-radius:50%}
+  .zone-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px;transition:border-color 0.3s}
+  .zone-card.active-zone{border-color:rgba(37,196,144,0.4)}
+  .zone-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .zone-name{font-size:14px;font-weight:700;color:var(--text1);flex:1}
+  .zone-active-tag{font-size:10px;font-weight:600;color:var(--green);background:var(--green-bg);border:1px solid rgba(37,196,144,0.3);border-radius:99px;padding:2px 8px;text-transform:uppercase;letter-spacing:0.4px}
+  .zone-mini-track{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden;display:flex;margin-bottom:10px}
+  .zone-prog-g{height:100%;background:var(--green);border-radius:99px;transition:width 0.6s ease}
+  .zone-prog-r{height:100%;background:var(--red);border-radius:99px;transition:width 0.6s ease}
+  .zone-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px}
+  .zone-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .zone-stat-num{font-size:20px;font-weight:700;line-height:1}
+  .zone-stat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.4px}
+  .zone-stat-num.green{color:var(--green)}.zone-stat-num.red{color:var(--red)}.zone-stat-num.amber{color:var(--amber)}
+  .reasons-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+  .reason-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+  .reason-row:last-child{border-bottom:none}
+  .reason-name{font-size:13px;color:var(--text2);flex:1}
+  .reason-count{font-size:16px;font-weight:700;color:var(--red);min-width:28px;text-align:right}
+  .reason-bar{height:4px;background:var(--red-bg);border-radius:99px;margin-top:4px;overflow:hidden}
+  .reason-bar-fill{height:100%;background:var(--red);border-radius:99px;transition:width 0.6s ease}
+  .reasons-empty{font-size:13px;color:var(--text3);font-style:italic;text-align:center;padding:8px 0}
+  .last-action-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;min-height:60px;transition:border-color 0.3s}
+  .last-action-card.delivered{border-color:rgba(37,196,144,0.4)}.last-action-card.failed{border-color:rgba(224,85,85,0.4)}
+  .last-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .last-icon.delivered{background:var(--green-bg);color:var(--green)}.last-icon.failed{background:var(--red-bg);color:var(--red)}
+  .last-info{flex:1}
+  .last-status{font-size:15px;font-weight:700}
+  .last-zone{font-size:12px;color:var(--text2);margin-top:1px}
+  .last-time{font-size:12px;color:var(--text3);margin-top:2px}
+  .last-empty{font-size:13px;color:var(--text3);font-style:italic}
+  .footer{background:var(--surface);border-top:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .footer-ts{font-size:11px;color:var(--text3);flex:1}
+  .conn-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid}
+  .conn-badge.connected{color:var(--green);border-color:rgba(37,196,144,0.3);background:var(--green-bg)}
+  .conn-badge.disconnected{color:var(--red);border-color:rgba(224,85,85,0.3);background:var(--red-bg)}
+  .conn-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .waiting{text-align:center;padding:32px 20px;color:var(--text3);font-size:14px;font-style:italic}
+  @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
+  .bumping{animation:bump 0.35s cubic-bezier(0.34,1.56,0.64,1)}
 </style>
 </head>
 <body>
 <div class="page">
-  <!-- HEADER -->
   <div class="header">
     <div class="header-top">
       <div class="header-dot"></div>
       <div class="header-title">Panel de Reparto</div>
-      <div class="header-live">
-        <div class="live-dot"></div>
-        En vivo
-      </div>
+      <div class="header-live"><div class="live-dot"></div>En vivo</div>
     </div>
     <div class="header-sub" id="header-date">Cargando...</div>
   </div>
 
-  <!-- BODY -->
+  <div class="active-zone-banner hidden" id="active-zone-banner">
+    <div class="zone-pulse"></div>
+    <span id="active-zone-text">—</span>
+  </div>
+
   <div class="dash-body">
-    <!-- METRICS -->
     <div class="metrics-grid">
-      <div class="metric-card green">
-        <div class="metric-label">Entregados</div>
-        <div class="metric-num" id="m-delivered">—</div>
-      </div>
-      <div class="metric-card amber">
-        <div class="metric-label">Pendientes</div>
-        <div class="metric-num" id="m-pending">—</div>
-      </div>
-      <div class="metric-card red">
-        <div class="metric-label">No entreg.</div>
-        <div class="metric-num" id="m-failed">—</div>
-      </div>
+      <div class="metric-card green"><div class="metric-label">Entregados</div><div class="metric-num" id="m-delivered">—</div></div>
+      <div class="metric-card amber"><div class="metric-label">Restantes</div><div class="metric-num" id="m-remaining">—</div></div>
+      <div class="metric-card red"><div class="metric-label">No entreg.</div><div class="metric-num" id="m-failed">—</div></div>
     </div>
 
-    <!-- PROGRESS -->
     <div class="progress-card">
       <div class="progress-header">
         <div class="progress-title">Progreso total</div>
@@ -471,59 +127,25 @@
       </div>
       <div class="progress-fraction" id="prog-fraction">Esperando datos del chofer...</div>
       <div class="progress-legend">
-        <div class="legend-item">
-          <div class="legend-dot" style="background:var(--green)"></div>
-          Entregados
-        </div>
-        <div class="legend-item">
-          <div class="legend-dot" style="background:var(--red)"></div>
-          No entregados
-        </div>
-        <div class="legend-item">
-          <div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border)"></div>
-          Pendientes
-        </div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Entregados</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--red)"></div>No entregados</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--surface2);border:1px solid var(--border)"></div>Restantes</div>
       </div>
     </div>
 
-    <!-- ZONE -->
     <div class="section-title">Por zona</div>
-    <div class="zone-card">
-      <div class="zone-name">📍 Florencio Varela / Berazategui</div>
-      <div class="zone-mini-track">
-        <div class="zone-prog-g" id="zone-pg" style="width:0%"></div>
-        <div class="zone-prog-r" id="zone-pr" style="width:0%"></div>
-      </div>
-      <div class="zone-stats">
-        <div class="zone-stat">
-          <span class="zone-stat-num green" id="z-d">—</span>
-          <span>entregados</span>
-        </div>
-        <div class="zone-stat">
-          <span class="zone-stat-num red" id="z-f">—</span>
-          <span>no entreg.</span>
-        </div>
-        <div class="zone-stat">
-          <span class="zone-stat-num amber" id="z-p">—</span>
-          <span>pendientes</span>
-        </div>
-      </div>
-    </div>
+    <div id="zones-container"><div class="waiting">Esperando datos del chofer...</div></div>
 
-    <!-- LAST ACTION -->
+    <div class="section-title">Motivos de no entrega</div>
+    <div class="reasons-card" id="reasons-card"><div class="reasons-empty">Sin datos aún</div></div>
+
     <div class="section-title">Última acción</div>
-    <div class="last-action-card" id="last-card">
-      <div class="last-empty">Esperando acciones del chofer...</div>
-    </div>
+    <div class="last-action-card" id="last-card"><div class="last-empty">Esperando acciones del chofer...</div></div>
   </div>
 
-  <!-- FOOTER -->
   <div class="footer">
     <div class="footer-ts" id="footer-ts">Sin datos aún</div>
-    <div class="conn-badge connected" id="conn-badge">
-      <div class="conn-dot"></div>
-      Conectado
-    </div>
+    <div class="conn-badge connected" id="conn-badge"><div class="conn-dot"></div>Conectado</div>
   </div>
 </div>
 
@@ -532,134 +154,171 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC8SLmgOK2LfnzK-PiZQKCl9WdVfO4ISys",
-  authDomain: "chofer-ml.firebaseapp.com",
-  databaseURL: "https://chofer-ml-default-rtdb.firebaseio.com",
-  projectId: "chofer-ml",
-  storageBucket: "chofer-ml.firebasestorage.app",
-  messagingSenderId: "648556111731",
-  appId: "1:648556111731:web:298b201b8b9f0f5c47c706"
+  apiKey:"AIzaSyC8SLmgOK2LfnzK-PiZQKCl9WdVfO4ISys",authDomain:"chofer-ml.firebaseapp.com",
+  databaseURL:"https://chofer-ml-default-rtdb.firebaseio.com",projectId:"chofer-ml",
+  storageBucket:"chofer-ml.firebasestorage.app",messagingSenderId:"648556111731",
+  appId:"1:648556111731:web:298b201b8b9f0f5c47c706"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const db  = getDatabase(app);
 
-const ZONE_KEY = 'florencio-varela-berazategui';
+const ZONE_NAMES = {
+  'florencio-varela-berazategui':'Florencio Varela/Berazategui','la-plata':'La Plata',
+  'quilmes':'Quilmes','lomas-de-zamora':'Lomas de Zamora','esteban-etcheverria':'Esteban Etcheverría',
+  'ezeiza':'Ezeiza','zona-1':'Zona 1','zona-2':'Zona 2','zona-3':'Zona 3',
+  'zona-4':'Zona 4','zona-5':'Zona 5','pilar':'Pilar'
+};
+function zoneName(key){ return ZONE_NAMES[key] || key || ''; }
 
-function todayStr() {
-  return new Date().toLocaleDateString('es-AR', {
-    timeZone: 'America/Argentina/Buenos_Aires',
-    year: 'numeric', month: '2-digit', day: '2-digit'
-  }).split('/').reverse().join('-');
+function todayStr(){
+  return new Date().toLocaleDateString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',
+    year:'numeric',month:'2-digit',day:'2-digit'}).split('/').reverse().join('-');
+}
+function todayFmt(){
+  return new Date().toLocaleDateString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',
+    weekday:'long',day:'numeric',month:'long'});
+}
+function fmtTime(iso){
+  if(!iso) return '';
+  return new Date(iso).toLocaleTimeString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',
+    hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+function bump(el){
+  if(!el) return;
+  el.classList.remove('bumping'); void el.offsetWidth;
+  el.classList.add('bumping');
+  el.addEventListener('animationend',()=>el.classList.remove('bumping'),{once:true});
+}
+function setVal(id,val,doBump){
+  const el=document.getElementById(id); if(!el) return;
+  el.textContent=val; if(doBump) bump(el);
+}
+function setConnected(ok){
+  const b=document.getElementById('conn-badge');
+  b.className=`conn-badge ${ok?'connected':'disconnected'}`;
+  b.innerHTML=`<div class="conn-dot"></div>${ok?'Conectado':'Sin conexión'}`;
 }
 
-function todayFmt() {
-  return new Date().toLocaleDateString('es-AR', {
-    timeZone: 'America/Argentina/Buenos_Aires',
-    weekday: 'long', day: 'numeric', month: 'long'
-  });
-}
+document.getElementById('header-date').textContent=todayFmt();
 
-function fmtTime(isoStr) {
-  if (!isoStr) return '';
-  return new Date(isoStr).toLocaleTimeString('es-AR', {
-    timeZone: 'America/Argentina/Buenos_Aires',
-    hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
-}
+let prevDelivered=null, prevFailed=null, prevActiveZone=null;
 
-document.getElementById('header-date').textContent = todayFmt();
-
-// Track previous values to detect last action
-let prev = { delivered: null, failed: null };
-
-const zoneRef = ref(db, `jornadas/${todayStr()}/${ZONE_KEY}`);
-
-onValue(zoneRef, (snapshot) => {
+onValue(ref(db,`jornadas/${todayStr()}`),(snapshot)=>{
   setConnected(true);
+  if(!snapshot.exists()) return;
+  const data=snapshot.val();
+  const meta=data['_meta']||{};
+  const zones=Object.entries(data).filter(([k])=>k!=='_meta');
 
-  if (!snapshot.exists()) {
-    return; // still showing defaults
+  const totalDelivered = meta.totalDelivered ?? zones.reduce((s,[,z])=>s+(z.delivered||0),0);
+  const totalFailed    = meta.totalFailed    ?? zones.reduce((s,[,z])=>s+(z.failed||0),0);
+  const totalPackages  = meta.totalPackages  ?? zones.reduce((s,[,z])=>s+(z.total||0),0);
+  const totalRemaining = meta.totalRemaining ?? zones.reduce((s,[,z])=>s+(z.remaining||0),0);
+  const totalManaged   = totalDelivered+totalFailed;
+  const totalPct       = totalPackages>0?Math.round(totalManaged/totalPackages*100):0;
+  const activeZone     = meta.activeZone||'';
+  const updatedAt      = meta.updatedAt||'';
+
+  let lastType=null;
+  if(prevDelivered!==null){
+    if(totalDelivered>prevDelivered) lastType='delivered';
+    else if(totalFailed>prevFailed)  lastType='failed';
+  }
+  prevDelivered=totalDelivered; prevFailed=totalFailed;
+
+  // Active zone banner
+  const banner=document.getElementById('active-zone-banner');
+  const aztEl=document.getElementById('active-zone-text');
+  if(activeZone&&zoneName(activeZone)){
+    banner.classList.remove('hidden');
+    aztEl.textContent=`Trabajando en: ${zoneName(activeZone)}`;
+    if(prevActiveZone!==activeZone) bump(aztEl);
+    prevActiveZone=activeZone;
+  } else { banner.classList.add('hidden'); }
+
+  // Totals
+  setVal('m-delivered',totalDelivered,lastType==='delivered');
+  setVal('m-failed',totalFailed,lastType==='failed');
+  setVal('m-remaining',totalRemaining,lastType!==null);
+  const pctG=totalPackages>0?(totalDelivered/totalPackages*100):0;
+  const pctR=totalPackages>0?(totalFailed/totalPackages*100):0;
+  document.getElementById('prog-green').style.width=pctG+'%';
+  document.getElementById('prog-red').style.width=pctR+'%';
+  document.getElementById('prog-pct').textContent=totalPct+'%';
+  document.getElementById('prog-fraction').textContent=`${totalManaged} de ${totalPackages} gestionados`;
+
+  // Zones
+  const container=document.getElementById('zones-container');
+  if(zones.length===0){ container.innerHTML='<div class="waiting">Esperando datos del chofer...</div>'; }
+  else {
+    container.innerHTML='';
+    zones.forEach(([key,z])=>{
+      const isActive=key===activeZone;
+      const total=z.total||0,delivered=z.delivered||0,failed=z.failed||0;
+      const remaining=z.remaining!==undefined?z.remaining:(total-delivered-failed);
+      const pg=total>0?(delivered/total*100):0;
+      const pr=total>0?(failed/total*100):0;
+      const pct=total>0?Math.round((delivered+failed)/total*100):0;
+      const card=document.createElement('div');
+      card.className=`zone-card${isActive?' active-zone':''}`;
+      card.innerHTML=`
+        <div class="zone-header">
+          <div class="zone-name">📍 ${zoneName(key)}</div>
+          ${isActive?'<div class="zone-active-tag">Activa ahora</div>':''}
+        </div>
+        <div class="zone-mini-track">
+          <div class="zone-prog-g" style="width:${pg}%"></div>
+          <div class="zone-prog-r" style="width:${pr}%"></div>
+        </div>
+        <div class="zone-stats">
+          <div class="zone-stat"><div class="zone-stat-num green" id="zd-${key}">${delivered}</div><div class="zone-stat-label">Entregados</div></div>
+          <div class="zone-stat"><div class="zone-stat-num red" id="zf-${key}">${failed}</div><div class="zone-stat-label">No entreg.</div></div>
+          <div class="zone-stat"><div class="zone-stat-num amber" id="zr-${key}">${remaining}</div><div class="zone-stat-label">Restantes</div></div>
+          <div class="zone-stat"><div class="zone-stat-num" style="color:var(--text2)">${pct}%</div><div class="zone-stat-label">Gestión</div></div>
+        </div>`;
+      container.appendChild(card);
+      if(isActive&&lastType){
+        setTimeout(()=>{
+          if(lastType==='delivered') bump(document.getElementById(`zd-${key}`));
+          if(lastType==='failed')    bump(document.getElementById(`zf-${key}`));
+          bump(document.getElementById(`zr-${key}`));
+        },50);
+      }
+    });
   }
 
-  const data = snapshot.val();
-  const { total = 0, delivered = 0, failed = 0, pending = 0, updatedAt } = data;
-  const managed = delivered + failed;
-  const pct = total > 0 ? Math.round((managed / total) * 100) : 0;
-
-  // Detect last action
-  let lastType = null;
-  if (prev.delivered !== null) {
-    if (delivered > prev.delivered) lastType = 'delivered';
-    else if (failed > prev.failed) lastType = 'failed';
-  }
-  prev.delivered = delivered;
-  prev.failed = failed;
-
-  // Update metrics
-  setVal('m-delivered', delivered, lastType === 'delivered');
-  setVal('m-pending', pending, lastType !== null);
-  setVal('m-failed', failed, lastType === 'failed');
-
-  // Progress
-  const pctG = total > 0 ? (delivered / total * 100) : 0;
-  const pctR = total > 0 ? (failed / total * 100) : 0;
-  document.getElementById('prog-green').style.width = pctG + '%';
-  document.getElementById('prog-red').style.width = pctR + '%';
-  document.getElementById('prog-pct').textContent = pct + '%';
-  document.getElementById('prog-fraction').textContent = `${managed} de ${total} gestionados`;
-
-  // Zone
-  document.getElementById('zone-pg').style.width = pctG + '%';
-  document.getElementById('zone-pr').style.width = pctR + '%';
-  setVal('z-d', delivered);
-  setVal('z-f', failed);
-  setVal('z-p', pending);
+  // Reasons
+  const allReasons={};
+  zones.forEach(([,z])=>{ if(z.failReasons) Object.entries(z.failReasons).forEach(([r,c])=>{ allReasons[r]=(allReasons[r]||0)+c; }); });
+  const sorted=Object.entries(allReasons).sort((a,b)=>b[1]-a[1]);
+  const maxC=sorted[0]?.[1]||1;
+  const rc=document.getElementById('reasons-card');
+  rc.innerHTML=sorted.length===0
+    ?'<div class="reasons-empty">Sin paquetes no entregados 🎉</div>'
+    :sorted.map(([r,c])=>`<div class="reason-row"><div style="flex:1"><div class="reason-name">${r}</div><div class="reason-bar"><div class="reason-bar-fill" style="width:${c/maxC*100}%"></div></div></div><div class="reason-count">${c}</div></div>`).join('');
 
   // Last action
-  if (lastType || (updatedAt && managed > 0)) {
-    const typeToShow = lastType || sessionStorage.getItem('last_action_type') || 'delivered';
-    if (lastType) sessionStorage.setItem('last_action_type', lastType);
-    const isD = typeToShow === 'delivered';
-    const card = document.getElementById('last-card');
-    card.className = `last-action-card ${typeToShow}`;
-    card.innerHTML = `
-      <div class="last-icon ${typeToShow}">${isD ? '✓' : '✕'}</div>
+  const typeToShow=lastType||sessionStorage.getItem('last_action_type')||'delivered';
+  if(lastType) sessionStorage.setItem('last_action_type',lastType);
+  if(totalManaged>0||lastType){
+    const isD=typeToShow==='delivered';
+    const card=document.getElementById('last-card');
+    card.className=`last-action-card ${typeToShow}`;
+    card.innerHTML=`
+      <div class="last-icon ${typeToShow}">${isD?'✓':'✕'}</div>
       <div class="last-info">
-        <div class="last-status" style="color:${isD ? 'var(--green)' : 'var(--red)'}">
-          ${isD ? 'Entregado' : 'No entregado'}
+        <div class="last-status" style="color:${isD?'var(--green)':'var(--red)'}">
+          ${isD?'Entregado':'No entregado'}
         </div>
+        ${activeZone?`<div class="last-zone">📍 ${zoneName(activeZone)}</div>`:''}
         <div class="last-time">${fmtTime(updatedAt)}</div>
-      </div>
-    `;
+      </div>`;
   }
 
-  // Footer
-  document.getElementById('footer-ts').textContent =
-    'Actualizado ' + fmtTime(updatedAt || new Date().toISOString());
+  document.getElementById('footer-ts').textContent=updatedAt?'Actualizado '+fmtTime(updatedAt):'Sin datos aún';
 
-}, (error) => {
-  console.error('Firebase error:', error);
-  setConnected(false);
-});
-
-function setVal(id, val, doBump) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = val;
-  if (doBump) {
-    el.classList.remove('bumping');
-    void el.offsetWidth;
-    el.classList.add('bumping');
-    el.addEventListener('animationend', () => el.classList.remove('bumping'), { once: true });
-  }
-}
-
-function setConnected(ok) {
-  const badge = document.getElementById('conn-badge');
-  badge.className = `conn-badge ${ok ? 'connected' : 'disconnected'}`;
-  badge.innerHTML = `<div class="conn-dot"></div>${ok ? 'Conectado' : 'Sin conexión'}`;
-}
+},(err)=>{ console.error(err); setConnected(false); });
 </script>
 </body>
 </html>
