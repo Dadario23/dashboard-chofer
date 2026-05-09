@@ -1,450 +1,134 @@
 <!DOCTYPE html>
-<html lang="es-AR" data-theme="dark">
+<html lang="es-AR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0e0e0e">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Panel de Reparto · Depósito</title>
-    <style>
-        /* Vercel-inspired Design System — Dark Theme */
-        :root {
-            --bg-primary:        #0e0e0e;
-            --color-delivered:   #25c490;
-            --color-remaining:   #e89b2a;
-            --color-failed:      #e05555;
-
-            --green-bg:          #0d2e22;
-            --green-border:      rgba(37,196,144,.3);
-            --amber-bg:          #2d1f0a;
-            --red-bg:            #2e1111;
-            --red-border:        rgba(224,85,85,.3);
-
-            --fg-primary:        oklch(90% 0.005 250);
-            --fg-secondary:      oklch(70% 0.005 250);
-            --fg-muted:          oklch(45% 0.005 250);
-            --surface-primary:   oklch(10% 0.005 250);
-            --surface-secondary: oklch(13% 0.005 250);
-            --border-color:      oklch(20% 0.005 250);
-
-            --shadow-border:     rgba(255,255,255,.08) 0 0 0 1px;
-            --shadow-card:       var(--shadow-border), rgba(255,255,255,.04) 0 2px 2px, rgba(15,15,15,1) 0 0 0 1px;
-
-            --font-sans:         -apple-system, BlinkMacSystemFont, 'Geist', 'Segoe UI', system-ui, sans-serif;
-            --font-mono:         'Geist Mono', ui-monospace, 'Roboto Mono', Menlo, monospace;
-
-            --radius-sm: 4px;
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --radius-pill: 9999px;
-
-            --space-1: 8px;
-            --space-2: 16px;
-            --space-3: 24px;
-            --space-4: 32px;
-        }
-
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-        html, body {
-            background: var(--bg-primary);
-            color: var(--fg-primary);
-            font-family: var(--font-sans);
-            min-height: 100dvh;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-        }
-
-        .page { display: flex; flex-direction: column; min-height: 100dvh; }
-
-        /* ── HEADER ── */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-            padding: var(--space-2) var(--space-3);
-        }
-        .header-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: var(--space-2);
-        }
-        .header-title {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -.4px;
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
-        }
-        .live-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-delivered);
-            text-transform: uppercase;
-            letter-spacing: .6px;
-        }
-        .live-dot {
-            width: 7px; height: 7px;
-            border-radius: 50%;
-            background: var(--color-delivered);
-            animation: pulse-dot 1.8s ease-in-out infinite;
-        }
-        @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.3} }
-        .header-date {
-            font-size: 13px;
-            color: var(--fg-secondary);
-        }
-
-        /* ── MAIN ── */
-        main {
-            flex: 1;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            padding: var(--space-3) var(--space-2);
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-3);
-        }
-
-        .section-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: .8px;
-            font-weight: 600;
-            color: var(--fg-muted);
-            margin-bottom: -8px;
-        }
-
-        /* ── GLOBAL METRICS ── */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-2);
-        }
-        .metric-card {
-            background: var(--surface-secondary);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-card);
-            padding: var(--space-3) var(--space-2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 6px;
-            min-height: 110px;
-            justify-content: center;
-        }
-        .metric-card.green { background: var(--green-bg); box-shadow: var(--shadow-card), 0 0 0 1px var(--green-border); }
-        .metric-card.amber { background: var(--amber-bg); box-shadow: var(--shadow-card), 0 0 0 1px rgba(232,155,42,.3); }
-        .metric-card.red   { background: var(--red-bg);   box-shadow: var(--shadow-card), 0 0 0 1px var(--red-border); }
-        .metric-value {
-            font-size: 56px;
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -2px;
-            font-feature-settings: "tnum" on;
-        }
-        .metric-card.green .metric-value { color: var(--color-delivered); }
-        .metric-card.amber .metric-value { color: var(--color-remaining); }
-        .metric-card.red   .metric-value { color: var(--color-failed); }
-        .metric-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: .6px;
-            font-weight: 600;
-            color: var(--fg-secondary);
-        }
-        .metric-card.green .metric-label { color: var(--color-delivered); }
-        .metric-card.amber .metric-label { color: var(--color-remaining); }
-        .metric-card.red   .metric-label { color: var(--color-failed); }
-
-        /* ── DRIVER CARDS GRID ── */
-        .drivers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: var(--space-2);
-        }
-
-        .driver-card {
-            background: var(--surface-secondary);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: box-shadow .3s;
-        }
-        .driver-card.active-now {
-            box-shadow: var(--shadow-card), 0 0 0 1px var(--green-border);
-        }
-
-        .driver-header {
-            display: flex;
-            align-items: center;
-            gap: var(--space-1);
-            padding: var(--space-2);
-            border-bottom: 1px solid var(--border-color);
-        }
-        .driver-avatar {
-            width: 44px; height: 44px;
-            border-radius: 50%;
-            background: var(--green-bg);
-            border: 2px solid var(--green-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--color-delivered);
-            flex-shrink: 0;
-        }
-        .driver-info { flex: 1; min-width: 0; }
-        .driver-name {
-            font-size: 16px;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .driver-zone {
-            font-size: 12px;
-            color: var(--color-delivered);
-            margin-top: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .driver-status {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: var(--radius-pill);
-            text-transform: uppercase;
-            letter-spacing: .4px;
-            flex-shrink: 0;
-        }
-        .driver-status.active {
-            color: var(--color-delivered);
-            background: var(--green-bg);
-            border: 1px solid var(--green-border);
-        }
-        .driver-status.finished {
-            color: var(--fg-muted);
-            background: transparent;
-            border: 1px solid var(--border-color);
-        }
-
-        .driver-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            border-bottom: 1px solid var(--border-color);
-        }
-        .driver-stat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: var(--space-2) var(--space-1);
-            border-right: 1px solid var(--border-color);
-        }
-        .driver-stat:last-child { border-right: none; }
-        .driver-stat-value {
-            font-size: 30px;
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -.04em;
-            font-feature-settings: "tnum" on;
-        }
-        .driver-stat-value.green { color: var(--color-delivered); }
-        .driver-stat-value.amber { color: var(--color-remaining); }
-        .driver-stat-value.red   { color: var(--color-failed); }
-        .driver-stat-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: .4px;
-            color: var(--fg-muted);
-            margin-top: 4px;
-        }
-
-        .driver-progress {
-            padding: 10px var(--space-2);
-            border-bottom: 1px solid var(--border-color);
-        }
-        .progress-track {
-            height: 6px;
-            background: var(--border-color);
-            border-radius: var(--radius-pill);
-            overflow: hidden;
-            display: flex;
-            margin-bottom: 6px;
-        }
-        .progress-g {
-            height: 100%;
-            background: var(--color-delivered);
-            border-radius: var(--radius-pill);
-            transition: width .6s ease;
-        }
-        .progress-r {
-            height: 100%;
-            background: var(--color-failed);
-            border-radius: var(--radius-pill);
-            transition: width .6s ease;
-        }
-        .progress-txt {
-            font-size: 11px;
-            color: var(--fg-secondary);
-            text-align: center;
-            font-family: var(--font-mono);
-        }
-
-        .driver-zones {
-            padding: var(--space-1) var(--space-2) var(--space-2);
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .zone-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .zone-active-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: var(--color-delivered);
-            flex-shrink: 0;
-            animation: pulse-dot 1.4s ease-in-out infinite;
-        }
-        .zone-spacer { width: 6px; flex-shrink: 0; }
-        .zone-name { font-size: 12px; color: var(--fg-secondary); flex: 1; }
-        .zone-num {
-            font-size: 12px;
-            font-weight: 600;
-            min-width: 28px;
-            text-align: right;
-            font-family: var(--font-mono);
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            background: var(--surface-primary);
-            border-top: 1px solid var(--border-color);
-            padding: var(--space-1) var(--space-3);
-        }
-        .footer-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: var(--space-2);
-        }
-        .footer-ts { font-size: 11px; color: var(--fg-muted); font-family: var(--font-mono); }
-
-        .conn-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: var(--radius-pill);
-            border: 1px solid;
-        }
-        .conn-badge.connected { color: var(--color-delivered); border-color: var(--green-border); background: var(--green-bg); }
-        .conn-badge.disconnected { color: var(--color-failed); border-color: var(--red-border); background: var(--red-bg); }
-        .conn-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-
-        .waiting {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--fg-muted);
-            font-size: 14px;
-            font-style: italic;
-        }
-
-        /* ── ANIMATIONS ── */
-        @keyframes bump {
-            0%   { transform: scale(1); }
-            40%  { transform: scale(1.18); }
-            100% { transform: scale(1); }
-        }
-        .bumping { animation: bump .35s cubic-bezier(.34,1.56,.64,1); }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 600px) {
-            .metrics-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .metric-value { font-size: 36px; }
-            main { padding: var(--space-2) var(--space-1); }
-            header { padding: var(--space-1) var(--space-2); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0e0e0e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Panel de Reparto · Depósito</title>
+<style>
+:root{--bg:#0e0e0e;--surface:#1a1a1a;--surface2:#242424;--border:#2e2e2e;--text1:#f0f0f0;--text2:#aaaaaa;--text3:#555555;--green:#25c490;--green-bg:#0d2e22;--green-border:#1a4d38;--amber:#e89b2a;--amber-bg:#2d1f0a;--red:#e05555;--red-bg:#2e1111;--red-border:#4d1e1e;--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100dvh}
+.screen{display:none;flex-direction:column;min-height:100dvh}
+.screen.active{display:flex}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 20px 14px;position:sticky;top:0;z-index:10}
+.header-top{display:flex;align-items:center;gap:10px}
+.header-dot{width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse-glow 2.2s ease-in-out infinite}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(37,196,144,.6)}50%{box-shadow:0 0 0 6px rgba(37,196,144,0)}}
+.header-title{font-size:20px;font-weight:700;letter-spacing:-.4px;flex:1}
+.header-live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--green);text-transform:uppercase}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 1.8s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
+.header-sub{font-size:13px;color:var(--text2);margin-top:5px}
+.btn-back{background:var(--surface2);border:1px solid var(--border);color:var(--text1);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-back:active{opacity:.7}
+.dash-body{flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.section-title{font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:600;color:var(--text3);padding-left:4px}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;display:flex;flex-direction:column;gap:5px}
+.metric-card.green{border-color:rgba(37,196,144,.3);background:var(--green-bg)}.metric-card.amber{border-color:rgba(232,155,42,.3);background:var(--amber-bg)}.metric-card.red{border-color:rgba(224,85,85,.3);background:var(--red-bg)}
+.metric-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.metric-card.green .metric-label{color:var(--green)}.metric-card.amber .metric-label{color:var(--amber)}.metric-card.red .metric-label{color:var(--red)}
+.metric-num{font-size:40px;font-weight:700;line-height:1;letter-spacing:-1.5px;color:var(--text1)}
+.driver-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .2s}
+.driver-card:active{opacity:.85}
+.driver-card.active-now{border-color:rgba(37,196,144,.4)}
+.driver-header{display:flex;align-items:center;gap:10px;padding:14px 16px 12px}
+.driver-avatar{width:38px;height:38px;border-radius:50%;background:var(--green-bg);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--green);flex-shrink:0}
+.driver-info{flex:1}
+.driver-name{font-size:16px;font-weight:700;color:var(--text1)}
+.driver-zone{font-size:12px;color:var(--green);margin-top:2px}
+.driver-status{font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;border:1px solid}
+.driver-status.active{color:var(--green);border-color:rgba(37,196,144,.3);background:var(--green-bg)}
+.driver-status.finished{color:var(--text3);border-color:var(--border);background:var(--surface2)}
+.driver-stats{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border)}
+.driver-stat{display:flex;flex-direction:column;align-items:center;padding:12px 8px;border-right:1px solid var(--border)}
+.driver-stat:last-child{border-right:none}
+.driver-stat-num{font-size:26px;font-weight:700;line-height:1;letter-spacing:-.04em}
+.driver-stat-num.green{color:var(--green)}.driver-stat-num.red{color:var(--red)}.driver-stat-num.amber{color:var(--amber)}
+.driver-stat-label{font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin-top:3px}
+.driver-hint{font-size:11px;color:var(--text3);text-align:center;padding:8px;border-top:1px solid var(--border)}
+.footer{background:var(--surface);border-top:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.footer-ts{font-size:11px;color:var(--text3);flex:1}
+.conn-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid}
+.conn-badge.connected{color:var(--green);border-color:rgba(37,196,144,.3);background:var(--green-bg)}
+.conn-badge.disconnected{color:var(--red);border-color:rgba(224,85,85,.3);background:var(--red-bg)}
+.conn-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.waiting{text-align:center;padding:32px;color:var(--text3);font-size:14px;font-style:italic}
+/* detail */
+.detail-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;align-items:center;gap:14px;margin-bottom:4px}
+.detail-avatar{width:52px;height:52px;border-radius:50%;background:var(--green-bg);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--green);flex-shrink:0}
+.detail-name{font-size:20px;font-weight:700;color:var(--text1);margin-bottom:4px}
+.detail-meta{font-size:12px;color:var(--text2);line-height:1.6}
+.detail-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.detail-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center}
+.detail-stat-num{font-size:24px;font-weight:700;line-height:1}
+.detail-stat-num.green{color:var(--green)}.detail-stat-num.red{color:var(--red)}.detail-stat-num.amber{color:var(--amber)}.detail-stat-num.white{color:var(--text1)}
+.detail-stat-label{font-size:9px;text-transform:uppercase;color:var(--text3);margin-top:3px}
+.reason-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:6px}
+.reason-name{font-size:13px;color:var(--text2)}.reason-count{font-size:16px;font-weight:700;color:var(--red)}
+.pkg{background:var(--surface);border-radius:10px;padding:12px 14px;margin-bottom:8px;border-left:3px solid}
+.pkg.delivered{border-color:var(--green)}.pkg.failed{border-color:var(--red)}
+.pkg-row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.pkg-status{font-size:13px;font-weight:700}
+.pkg-status.delivered{color:var(--green)}.pkg-status.failed{color:var(--red)}
+.pkg-time{font-size:11px;color:var(--text3)}
+.pkg-zone{font-size:12px;color:var(--text2);margin-bottom:3px}
+.pkg-loc{font-size:12px;color:var(--text2);display:flex;gap:4px}
+.pkg-reason{font-size:12px;color:var(--red);margin-top:4px;font-style:italic}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
+.bumping{animation:bump .35s cubic-bezier(.34,1.56,.64,1)}
+</style>
 </head>
 <body>
-<div class="page">
 
-    <header>
-        <div class="header-inner">
-            <div class="header-title">Panel de Reparto</div>
-            <div class="header-right">
-                <div class="live-badge"><div class="live-dot"></div>En vivo</div>
-                <div class="header-date" id="header-date">Cargando...</div>
-            </div>
-        </div>
-    </header>
-
-    <main>
-        <div class="section-label">Totales del día</div>
-        <div class="metrics-grid">
-            <div class="metric-card green">
-                <div class="metric-value" id="g-delivered">—</div>
-                <div class="metric-label">Entregados</div>
-            </div>
-            <div class="metric-card amber">
-                <div class="metric-value" id="g-remaining">—</div>
-                <div class="metric-label">Restantes</div>
-            </div>
-            <div class="metric-card red">
-                <div class="metric-value" id="g-failed">—</div>
-                <div class="metric-label">No entreg.</div>
-            </div>
-        </div>
-
-        <div class="section-label">Choferes en ruta</div>
-        <div class="drivers-grid" id="drivers-container">
-            <div class="waiting">Esperando datos de los choferes...</div>
-        </div>
-    </main>
-
-    <footer>
-        <div class="footer-inner">
-            <div class="footer-ts" id="footer-ts">Sin datos aún</div>
-            <div class="conn-badge connected" id="conn-badge">
-                <div class="conn-dot"></div>Conectado
-            </div>
-        </div>
-    </footer>
-
+<!-- SCREEN 1: lista -->
+<div id="screen-list" class="screen active">
+  <div class="header">
+    <div class="header-top">
+      <div class="header-dot"></div>
+      <div class="header-title">Panel de Reparto</div>
+      <div class="header-live"><div class="live-dot"></div>En vivo</div>
+    </div>
+    <div class="header-sub" id="header-date"></div>
+  </div>
+  <div class="dash-body">
+    <div class="section-title">Totales del día</div>
+    <div class="metrics-grid">
+      <div class="metric-card green"><div class="metric-label">Entregados</div><div class="metric-num" id="g-delivered">—</div></div>
+      <div class="metric-card amber"><div class="metric-label">Restantes</div><div class="metric-num" id="g-remaining">—</div></div>
+      <div class="metric-card red"><div class="metric-label">No entreg.</div><div class="metric-num" id="g-failed">—</div></div>
+    </div>
+    <div class="section-title">Choferes en ruta</div>
+    <div id="drivers-container"><div class="waiting">Esperando datos...</div></div>
+  </div>
+  <div class="footer">
+    <div class="footer-ts" id="footer-ts">Sin datos aún</div>
+    <div class="conn-badge connected" id="conn-badge"><div class="conn-dot"></div>Conectado</div>
+  </div>
 </div>
 
-<!-- ── FIREBASE LOGIC (original sin modificaciones) ── -->
+<!-- SCREEN 2: detalle chofer -->
+<div id="screen-detail" class="screen">
+  <div class="header">
+    <div class="header-top">
+      <button class="btn-back" onclick="goBack()">← Volver</button>
+      <div class="header-title" id="detail-title">Detalle</div>
+    </div>
+    <div class="header-sub" id="detail-sub"></div>
+  </div>
+  <div class="dash-body" id="detail-body">
+    <div class="waiting">Cargando...</div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-const firebaseConfig = {
+const app = initializeApp({
   apiKey:"AIzaSyC8SLmgOK2LfnzK-PiZQKCl9WdVfO4ISys",
   authDomain:"chofer-ml.firebaseapp.com",
   databaseURL:"https://chofer-ml-default-rtdb.firebaseio.com",
@@ -452,168 +136,177 @@ const firebaseConfig = {
   storageBucket:"chofer-ml.firebasestorage.app",
   messagingSenderId:"648556111731",
   appId:"1:648556111731:web:298b201b8b9f0f5c47c706"
-};
+});
+const db = getDatabase(app);
 
-const app = initializeApp(firebaseConfig);
-const db  = getDatabase(app);
+const ZONES = {'zona-1':'Zona 1','zona-2':'Zona 2','zona-3':'Zona 3','zona-4':'Zona 4','zona-5':'Zona 5','zona-6':'Zona 6','lanus-avellaneda':'Lanús/Avellaneda','lomas-de-zamora':'Lomas de Zamora','florencio-varela-berazategui':'Florencio Varela/Berazategui','quilmes-almirante-brown':'Quilmes/Almirante Brown','almirante-brown-guernica':'Almirante Brown/Guernica','ezeiza-canuelas':'Ezeiza/Cañuelas','la-plata':'La Plata','tres-febrero-hurlingham':'Tres de Febrero/Hurlingham','merlo-marcos-paz':'Merlo/Marcos Paz','moron-ituzaingo':'Morón/Ituzaingó','la-matanza-sur':'La Matanza Sur','la-matanza-norte':'La Matanza Norte','moreno':'Moreno','general-rodriguez-lujan':'General Rodriguez/Luján','pilar':'Pilar','escobar':'Escobar','tigre':'Tigre','jose-c-paz-malvinas':'José C. Paz/Malvinas Argentinas','san-isidro':'San Isidro','vicente-lopez':'Vicente López','san-martin':'San Martín','otro':'Otro'};
 
-const ZONE_NAMES = {
-  'florencio-varela-berazategui':'Florencio Varela/Berazategui','la-plata':'La Plata',
-  'quilmes':'Quilmes','lomas-de-zamora':'Lomas de Zamora','esteban-etcheverria':'Esteban Etcheverría',
-  'ezeiza':'Ezeiza','zona-1':'Zona 1','zona-2':'Zona 2','zona-3':'Zona 3',
-  'zona-4':'Zona 4','zona-5':'Zona 5','pilar':'Pilar'
-};
-
-function todayStr(){
-  return new Date().toLocaleDateString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',
-    year:'numeric',month:'2-digit',day:'2-digit'}).split('/').reverse().join('-');
-}
-function todayFmt(){
-  return new Date().toLocaleDateString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',
-    weekday:'long',day:'numeric',month:'long'});
-}
-function fmtTime(iso){
-  if(!iso) return '';
-  return new Date(iso).toLocaleTimeString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',
-    hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-function zoneName(k){ return ZONE_NAMES[k] || k || '—'; }
-function initials(name){ return name ? name.charAt(0).toUpperCase() : '?'; }
-function bump(el){ if(!el) return; el.classList.remove('bumping'); void el.offsetWidth; el.classList.add('bumping'); el.addEventListener('animationend',()=>el.classList.remove('bumping'),{once:true}); }
-function setConnected(ok){
-  const b=document.getElementById('conn-badge');
-  b.className=`conn-badge ${ok?'connected':'disconnected'}`;
-  b.innerHTML=`<div class="conn-dot"></div>${ok?'Conectado':'Sin conexión'}`;
-}
+function todayStr(){return new Date().toLocaleDateString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',year:'numeric',month:'2-digit',day:'2-digit'}).split('/').reverse().join('-')}
+function todayFmt(){return new Date().toLocaleDateString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',weekday:'long',day:'numeric',month:'long'})}
+function fmtTime(iso){if(!iso)return '';return new Date(iso).toLocaleTimeString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+function fmtDT(iso){if(!iso)return '';return new Date(iso).toLocaleString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}
+function zn(k){return ZONES[k]||k||'—'}
+function ini(n){return n?n.charAt(0).toUpperCase():'?'}
+function bump(el){if(!el)return;el.classList.remove('bumping');void el.offsetWidth;el.classList.add('bumping');el.addEventListener('animationend',()=>el.classList.remove('bumping'),{once:true})}
+function setConn(ok){const b=document.getElementById('conn-badge');b.className=`conn-badge ${ok?'connected':'disconnected'}`;b.innerHTML=`<div class="conn-dot"></div>${ok?'Conectado':'Sin conexión'}`}
 
 document.getElementById('header-date').textContent = todayFmt();
 
-const prevTotals = {};
 const apodos = {};
+let currentUid = null;
+let detailUnsub = null;
+const prevTotals = {};
 
-onValue(ref(db,'usuarios'), snap => {
-  if(!snap.exists()) return;
-  snap.forEach(child => {
-    const uid  = child.key;
-    const data = child.val();
-    apodos[uid] = data.apodo || uid;
+// load apodos
+onValue(ref(db,'usuarios'),snap=>{if(!snap.exists())return;snap.forEach(c=>{apodos[c.key]=c.val().apodo||c.key})});
+
+// nav
+window.goBack = ()=>{
+  document.getElementById('screen-list').classList.add('active');
+  document.getElementById('screen-detail').classList.remove('active');
+  if(detailUnsub){detailUnsub();detailUnsub=null}
+  currentUid=null;
+};
+
+window.openDetail = uid=>{
+  currentUid=uid;
+  document.getElementById('screen-list').classList.remove('active');
+  document.getElementById('screen-detail').classList.add('active');
+  document.getElementById('detail-body').innerHTML='<div class="waiting">Cargando...</div>';
+  if(detailUnsub){detailUnsub();detailUnsub=null}
+  detailUnsub = onValue(ref(db,`jornadas/${todayStr()}/${uid}`),snap=>{
+    if(!snap.exists()){document.getElementById('detail-body').innerHTML='<div class="waiting">Sin datos</div>';return}
+    renderDetail(uid,snap.val());
   });
-});
+};
 
-onValue(ref(db, `jornadas/${todayStr()}`), (snapshot) => {
-  setConnected(true);
-
-  if(!snapshot.exists()){
-    document.getElementById('drivers-container').innerHTML =
-      '<div class="waiting">Esperando datos de los choferes...</div>';
+// main list
+onValue(ref(db,`jornadas/${todayStr()}`),snap=>{
+  setConn(true);
+  if(!snap.exists()){
+    document.getElementById('drivers-container').innerHTML='<div class="waiting">Esperando datos de los choferes...</div>';
+    ['g-delivered','g-remaining','g-failed'].forEach(id=>document.getElementById(id).textContent='0');
     return;
   }
+  const data=snap.val();
+  const drivers=Object.entries(data);
+  let gD=0,gF=0,gR=0,latestTs='';
+  drivers.forEach(([uid,d])=>{const m=d['_meta']||{};gD+=m.totalDelivered||0;gF+=m.totalFailed||0;gR+=m.totalRemaining||0;if(m.updatedAt&&m.updatedAt>latestTs)latestTs=m.updatedAt});
+  document.getElementById('g-delivered').textContent=gD;
+  document.getElementById('g-remaining').textContent=gR;
+  document.getElementById('g-failed').textContent=gF;
 
-  const data = snapshot.val();
-  const drivers = Object.entries(data);
-  if(drivers.length === 0) return;
-
-  let gDelivered=0, gFailed=0, gRemaining=0, latestTs='';
-
-  drivers.forEach(([uid, driverData]) => {
-    const meta = driverData['_meta'] || {};
-    gDelivered += meta.totalDelivered || 0;
-    gFailed    += meta.totalFailed    || 0;
-    gRemaining += meta.totalRemaining || 0;
-    if(meta.updatedAt && meta.updatedAt > latestTs) latestTs = meta.updatedAt;
-  });
-
-  document.getElementById('g-delivered').textContent = gDelivered;
-  document.getElementById('g-remaining').textContent = gRemaining;
-  document.getElementById('g-failed').textContent    = gFailed;
-
-  const container = document.getElementById('drivers-container');
-  container.innerHTML = '';
-
-  drivers.forEach(([uid, driverData]) => {
-    const meta       = driverData['_meta'] || {};
-    const apodo      = apodos[uid] || meta.userName || uid.slice(0,8);
-    const activeZone = meta.activeZone || '';
-    const delivered  = meta.totalDelivered || 0;
-    const failed     = meta.totalFailed    || 0;
-    const remaining  = meta.totalRemaining || 0;
-    const total      = meta.totalPackages  || 0;
-    const managed    = delivered + failed;
-    const pct        = total > 0 ? Math.round(managed/total*100) : 0;
-    const isFinished = !!meta.finishedAt;
-    const updatedAt  = meta.updatedAt || '';
-
-    const prev       = prevTotals[uid] || {};
-    const didDeliver = delivered > (prev.delivered || 0);
-    const didFail    = failed    > (prev.failed    || 0);
-    prevTotals[uid]  = { delivered, failed, remaining };
-
-    const pctG = total > 0 ? (delivered/total*100) : 0;
-    const pctR = total > 0 ? (failed/total*100)    : 0;
-
-    const zoneKeys = Object.keys(driverData).filter(k => k !== '_meta');
-    const zonesHtml = zoneKeys.map(key => {
-      const z       = driverData[key];
-      const isActive = key === activeZone;
-      return `
-        <div class="zone-row">
-          ${isActive ? '<div class="zone-active-dot"></div>' : '<div class="zone-spacer"></div>'}
-          <div class="zone-name">${zoneName(key)}</div>
-          <div class="zone-num" style="color:var(--color-delivered)">${z.delivered||0}✓</div>
-          <div class="zone-num" style="color:var(--color-failed)">${z.failed||0}✕</div>
-          <div class="zone-num" style="color:var(--color-remaining)">${z.remaining||0}⏳</div>
-        </div>`;
-    }).join('');
-
-    const card = document.createElement('div');
-    card.className = `driver-card${!isFinished ? ' active-now' : ''}`;
-    card.id = `driver-${uid}`;
-    card.innerHTML = `
+  const container=document.getElementById('drivers-container');
+  container.innerHTML='';
+  drivers.forEach(([uid,d])=>{
+    const m=d['_meta']||{};
+    const apodo=apodos[uid]||m.userName||uid.slice(0,8);
+    const delivered=m.totalDelivered||0,failed=m.totalFailed||0,remaining=m.totalRemaining||0;
+    const isFinished=!!m.finishedAt;
+    const prev=prevTotals[uid]||{};
+    const didD=delivered>(prev.delivered||0),didF=failed>(prev.failed||0);
+    prevTotals[uid]={delivered,failed,remaining};
+    const card=document.createElement('div');
+    card.className=`driver-card${!isFinished?' active-now':''}`;
+    card.id=`driver-${uid}`;
+    card.onclick=()=>window.openDetail(uid);
+    card.innerHTML=`
       <div class="driver-header">
-        <div class="driver-avatar">${initials(apodo)}</div>
+        <div class="driver-avatar">${ini(apodo)}</div>
         <div class="driver-info">
           <div class="driver-name">${apodo}</div>
-          ${activeZone && !isFinished
-            ? `<div class="driver-zone">📍 ${zoneName(activeZone)}</div>`
-            : ''}
+          ${m.activeZone&&!isFinished?`<div class="driver-zone">📍 ${zn(m.activeZone)}</div>`:''}
         </div>
-        <div class="driver-status ${isFinished ? 'finished' : 'active'}">
-          ${isFinished ? 'Finalizado' : 'En ruta'}
-        </div>
+        <div class="driver-status ${isFinished?'finished':'active'}">${isFinished?'Finalizado':'En ruta'}</div>
       </div>
       <div class="driver-stats">
-        <div class="driver-stat">
-          <div class="driver-stat-value green" id="d-${uid}-delivered">${delivered}</div>
-          <div class="driver-stat-label">Entregados</div>
-        </div>
-        <div class="driver-stat">
-          <div class="driver-stat-value red" id="d-${uid}-failed">${failed}</div>
-          <div class="driver-stat-label">No entreg.</div>
-        </div>
-        <div class="driver-stat">
-          <div class="driver-stat-value amber" id="d-${uid}-remaining">${remaining}</div>
-          <div class="driver-stat-label">Restantes</div>
-        </div>
+        <div class="driver-stat"><div class="driver-stat-num green" id="d-${uid}-d">${delivered}</div><div class="driver-stat-label">Entregados</div></div>
+        <div class="driver-stat"><div class="driver-stat-num red" id="d-${uid}-f">${failed}</div><div class="driver-stat-label">No entreg.</div></div>
+        <div class="driver-stat"><div class="driver-stat-num amber" id="d-${uid}-r">${remaining}</div><div class="driver-stat-label">Restantes</div></div>
       </div>
-      <div class="driver-progress">
-        <div class="progress-track">
-          <div class="progress-g" style="width:${pctG}%"></div>
-          <div class="progress-r" style="width:${pctR}%"></div>
-        </div>
-        <div class="progress-txt">${managed} de ${total} gestionados · ${pct}%${updatedAt ? ' · ' + fmtTime(updatedAt) : ''}</div>
-      </div>
-      ${zoneKeys.length > 0 ? `<div class="driver-zones">${zonesHtml}</div>` : ''}
-    `;
+      <div class="driver-hint">Tocá para ver detalle de entregas →</div>`;
     container.appendChild(card);
-
-    if(didDeliver){ setTimeout(()=>{ bump(document.getElementById(`d-${uid}-delivered`)); bump(document.getElementById(`d-${uid}-remaining`)); },50); }
-    if(didFail)   { setTimeout(()=>{ bump(document.getElementById(`d-${uid}-failed`));    bump(document.getElementById(`d-${uid}-remaining`)); },50); }
+    if(didD){setTimeout(()=>{bump(document.getElementById(`d-${uid}-d`));bump(document.getElementById(`d-${uid}-r`))},50)}
+    if(didF){setTimeout(()=>{bump(document.getElementById(`d-${uid}-f`));bump(document.getElementById(`d-${uid}-r`))},50)}
   });
+  document.getElementById('footer-ts').textContent=latestTs?'Actualizado '+fmtTime(latestTs):'Sin datos aún';
+  // update detail if open
+  if(currentUid&&data[currentUid])renderDetail(currentUid,data[currentUid]);
+},err=>{console.error(err);setConn(false)});
 
-  document.getElementById('footer-ts').textContent =
-    latestTs ? 'Actualizado ' + fmtTime(latestTs) : 'Sin datos aún';
+function renderDetail(uid,d){
+  const m=d['_meta']||{};
+  const apodo=apodos[uid]||m.userName||uid.slice(0,8);
+  const isFinished=!!m.finishedAt;
+  const delivered=m.totalDelivered||0,failed=m.totalFailed||0,total=m.totalPackages||0,remaining=m.totalRemaining||0;
+  const pct=total>0?Math.round((delivered+failed)/total*100):0;
 
-}, err => { console.error(err); setConnected(false); });
+  document.getElementById('detail-title').textContent=apodo;
+  document.getElementById('detail-sub').textContent=
+    `${isFinished?'Finalizado':'En ruta'} · Inicio: ${fmtDT(m.startedAt)}${m.finishedAt?' · Fin: '+fmtDT(m.finishedAt):''}`;
+
+  // Build events
+  const events=[];
+  const dr=d['deliveredRecords']||{};
+  Object.entries(dr).forEach(([id,r])=>events.push({type:'delivered',id,zoneName:r.zoneName||zn(r.zoneKey),timestamp:r.timestamp||'',location:r.location||'',reason:'',retried:false}));
+  const fp=d['failedPackages']||{};
+  Object.entries(fp).forEach(([id,p])=>{
+    const reason=(p.reasonDetail&&p.reasonDetail!=='')?p.reasonDetail:(p.reasonDisplay||p.reason||'');
+    events.push({type:'failed',id,zoneName:p.zoneName||zn(p.zoneKey),timestamp:p.timestamp||'',location:p.location||'',reason,retried:p.retriedSuccess||false});
+  });
+  events.sort((a,b)=>a.timestamp.localeCompare(b.timestamp));
+
+  // reasons
+  const rc={};
+  events.filter(e=>e.type==='failed'&&!e.retried).forEach(e=>{const r=e.reason||'Sin motivo';rc[r]=(rc[r]||0)+1});
+  const re=Object.entries(rc).sort((a,b)=>b[1]-a[1]);
+
+  let html=`
+  <div class="detail-summary">
+    <div class="detail-avatar">${ini(apodo)}</div>
+    <div>
+      <div class="detail-name">${apodo}</div>
+      <div class="detail-meta">
+        ${pct}% gestionado · ${total} paquetes totales<br>
+        ${isFinished?'✅ Jornada finalizada':'🟢 En ruta'}
+      </div>
+    </div>
+  </div>
+  <div class="detail-stats">
+    <div class="detail-stat"><div class="detail-stat-num green">${delivered}</div><div class="detail-stat-label">Entregados</div></div>
+    <div class="detail-stat"><div class="detail-stat-num red">${failed}</div><div class="detail-stat-label">No entreg.</div></div>
+    <div class="detail-stat"><div class="detail-stat-num amber">${remaining}</div><div class="detail-stat-label">Restantes</div></div>
+    <div class="detail-stat"><div class="detail-stat-num white">${pct}%</div><div class="detail-stat-label">Gestión</div></div>
+  </div>`;
+
+  if(re.length>0){
+    html+=`<div class="section-title" style="margin-top:16px">Motivos de no entrega</div>`;
+    re.forEach(([r,c])=>html+=`<div class="reason-row"><span class="reason-name">${r}</span><span class="reason-count">${c}</span></div>`);
+  }
+
+  html+=`<div class="section-title" style="margin-top:16px">Paquetes · ${events.length} registros</div>`;
+  if(events.length===0){
+    html+=`<div class="waiting">Sin paquetes registrados todavía</div>`;
+  } else {
+    events.forEach(e=>{
+      const isD=e.type==='delivered'||e.retried;
+      const statusText=e.type==='delivered'?'✓ Entregado':(e.retried?'✓ Reintento exitoso':'✕ No entregado');
+      const cls=isD?'delivered':'failed';
+      html+=`
+      <div class="pkg ${cls}">
+        <div class="pkg-row1">
+          <span class="pkg-status ${cls}">${statusText}</span>
+          <span class="pkg-time">${fmtDT(e.timestamp)}</span>
+        </div>
+        <div class="pkg-zone">${e.zoneName}</div>
+        <div class="pkg-loc"><span>📍</span><span style="color:${e.location?'var(--text2)':'var(--text3)'}">${e.location||'Sin ubicación'}</span></div>
+        ${!isD&&e.reason?`<div class="pkg-reason">Motivo: ${e.reason}</div>`:''}
+      </div>`;
+    });
+  }
+
+  document.getElementById('detail-body').innerHTML=html;
+}
 </script>
 </body>
 </html>
