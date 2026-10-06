@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0e0e0e">
+<meta name="theme-color" content="#f6f7f9">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Panel de Reparto · Depósito</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-:root{--bg:#0e0e0e;--surface:#1a1a1a;--surface2:#242424;--border:#2e2e2e;--text1:#f0f0f0;--text2:#aaaaaa;--text3:#555555;--green:#25c490;--green-bg:#0d2e22;--green-border:#1a4d38;--amber:#e89b2a;--amber-bg:#2d1f0a;--red:#e05555;--red-bg:#2e1111;--red-border:#4d1e1e;--orange:#f07830;--radius:14px}
+:root{--bg:#f6f7f9;--surface:#ffffff;--surface2:#f0f2f5;--border:#e3e6eb;--text1:#111827;--text2:#5b6472;--text3:#98a1ae;--green:#0b8a5f;--green-bg:#e6f6ef;--green-border:#bfe6d4;--amber:#b7791f;--amber-bg:#fdf3e1;--red:#d64545;--red-bg:#fdecec;--red-border:#f6c7c7;--orange:#d9631e;--radius:14px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100dvh;overflow:hidden}
 .app{display:flex;flex-direction:column;height:100dvh}
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 20px 0;flex-shrink:0;z-index:100}
 .header-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .header-dot{width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse-glow 2.2s ease-in-out infinite}
-@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(37,196,144,.6)}50%{box-shadow:0 0 0 6px rgba(37,196,144,0)}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(11,138,95,.6)}50%{box-shadow:0 0 0 6px rgba(11,138,95,0)}}
 .header-title{font-size:20px;font-weight:700;letter-spacing:-.4px;flex:1}
 .header-live{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--green);text-transform:uppercase}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 1.8s ease-in-out infinite}
@@ -32,17 +32,17 @@ html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,Blin
 .section-title{font-size:11px;text-transform:uppercase;letter-spacing:.8px;font-weight:600;color:var(--text3);padding-left:4px}
 .metrics-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 10px;text-align:center;display:flex;flex-direction:column;gap:5px}
-.metric-card.green{border-color:rgba(37,196,144,.3);background:var(--green-bg)}.metric-card.amber{border-color:rgba(232,155,42,.3);background:var(--amber-bg)}.metric-card.red{border-color:rgba(224,85,85,.3);background:var(--red-bg)}
+.metric-card.green{border-color:rgba(11,138,95,.3);background:var(--green-bg)}.metric-card.amber{border-color:rgba(183,121,31,.3);background:var(--amber-bg)}.metric-card.red{border-color:rgba(214,69,69,.3);background:var(--red-bg)}
 .metric-label{font-size:10px;text-transform:uppercase;letter-spacing:.6px;font-weight:600}
 .metric-card.green .metric-label{color:var(--green)}.metric-card.amber .metric-label{color:var(--amber)}.metric-card.red .metric-label{color:var(--red)}
 .metric-num{font-size:40px;font-weight:700;line-height:1;letter-spacing:-1.5px;color:var(--text1)}
 .driver-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer}
-.driver-card:active{opacity:.85}.driver-card.active-now{border-color:rgba(37,196,144,.4)}
+.driver-card:active{opacity:.85}.driver-card.active-now{border-color:rgba(11,138,95,.4)}
 .driver-header{display:flex;align-items:center;gap:10px;padding:14px 16px 12px}
 .driver-avatar{width:38px;height:38px;border-radius:50%;background:var(--green-bg);border:2px solid var(--green-border);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--green);flex-shrink:0}
 .driver-info{flex:1}.driver-name{font-size:16px;font-weight:700;color:var(--text1)}.driver-zone{font-size:12px;color:var(--green);margin-top:2px}
 .driver-status{font-size:10px;font-weight:600;padding:3px 8px;border-radius:99px;border:1px solid}
-.driver-status.active{color:var(--green);border-color:rgba(37,196,144,.3);background:var(--green-bg)}
+.driver-status.active{color:var(--green);border-color:rgba(11,138,95,.3);background:var(--green-bg)}
 .driver-status.finished{color:var(--text3);border-color:var(--border);background:var(--surface2)}
 .driver-stats{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border)}
 .driver-stat{display:flex;flex-direction:column;align-items:center;padding:12px 8px;border-right:1px solid var(--border)}.driver-stat:last-child{border-right:none}
@@ -79,16 +79,16 @@ html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,Blin
 .map-legend{display:flex;align-items:center;gap:12px;margin-left:auto;flex-wrap:wrap}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.legend-dot.green{background:#25c490}.legend-dot.orange{background:#f07830}.legend-dot.blue{background:#3b82f6}
+.legend-dot.green{background:#0b8a5f}.legend-dot.orange{background:#d9631e}.legend-dot.blue{background:#3b82f6}
 #leaflet-map{flex:1;min-height:0}
 .footer{background:var(--surface);border-top:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .footer-ts{font-size:11px;color:var(--text3);flex:1}
 .conn-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid}
-.conn-badge.connected{color:var(--green);border-color:rgba(37,196,144,.3);background:var(--green-bg)}
-.conn-badge.disconnected{color:var(--red);border-color:rgba(224,85,85,.3);background:var(--red-bg)}
+.conn-badge.connected{color:var(--green);border-color:rgba(11,138,95,.3);background:var(--green-bg)}
+.conn-badge.disconnected{color:var(--red);border-color:rgba(214,69,69,.3);background:var(--red-bg)}
 .conn-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
-/* Leaflet dark popups */
-.leaflet-popup-content-wrapper{background:var(--surface);color:var(--text1);border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+/* Leaflet popups */
+.leaflet-popup-content-wrapper{background:var(--surface);color:var(--text1);border:1px solid var(--border);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
 .leaflet-popup-tip{background:var(--surface)}
 .leaflet-popup-content{margin:12px 14px;font-size:13px;line-height:1.6}
 .popup-title{font-weight:700;font-size:14px;margin-bottom:4px}
@@ -96,6 +96,8 @@ html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,Blin
 .popup-row{color:var(--text2);font-size:12px}.popup-row span{color:var(--text1)}
 @keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
 .bumping{animation:bump .35s cubic-bezier(.34,1.56,.64,1)}
+.tag-part{font-size:9px;font-weight:700;letter-spacing:.4px;color:var(--amber);background:var(--amber-bg);border:1px solid rgba(183,121,31,.3);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.part-left{font-size:11px;font-weight:600;color:var(--amber);margin-top:2px}
 </style>
 </head>
 <body>
@@ -119,7 +121,7 @@ html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,Blin
         <div class="section-title">Totales del día</div>
         <div class="metrics-grid">
           <div class="metric-card green"><div class="metric-label">Entregados</div><div class="metric-num" id="g-delivered">—</div></div>
-          <div class="metric-card amber"><div class="metric-label">Restantes</div><div class="metric-num" id="g-remaining">—</div></div>
+          <div class="metric-card amber"><div class="metric-label">Restantes</div><div class="metric-num" id="g-remaining">—</div><div class="part-left" id="g-part" style="display:none"></div></div>
           <div class="metric-card red"><div class="metric-label">No entreg.</div><div class="metric-num" id="g-failed">—</div></div>
         </div>
         <div class="section-title">Choferes en ruta</div>
@@ -185,8 +187,13 @@ function todayStr(){return new Date().toLocaleDateString('es-AR',{timeZone:'Amer
 function todayFmt(){return new Date().toLocaleDateString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',weekday:'long',day:'numeric',month:'long'})}
 function fmtTime(iso){if(!iso)return '';return new Date(iso).toLocaleTimeString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',hour:'2-digit',minute:'2-digit',second:'2-digit'})}
 function fmtDT(iso){if(!iso)return '';return new Date(iso).toLocaleString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}
-function zn(k){return ZONES[k]||k||'—'}
-function ini(n){return n?n.charAt(0).toUpperCase():'?'}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function zn(k){return esc(ZONES[k]||k||'—')}
+const NON_ZONE=['_meta','_inicio','deliveredRecords','failedPackages'];
+// Part que le faltan a un chofer: suma de las zonas (total − entregados − fallidos de tipo Part)
+function partLeft(d){return Object.entries(d||{}).reduce((n,[k,z])=>NON_ZONE.includes(k)||typeof z!=='object'?n:n+Math.max(0,(z.partTotal||0)-(z.partDelivered||0)-(z.partFailed||0)),0)}
+function partTag(t){return t==='part'?'<span class="tag-part">PART</span>':''}
+function ini(n){return n?esc(n.charAt(0).toUpperCase()):'?'}
 function validCoords(lat,lng){return typeof lat==='number'&&typeof lng==='number'&&lat!==0&&lng!==0&&Math.abs(lat)<90&&Math.abs(lng)<180}
 function setConn(ok){const b=document.getElementById('conn-badge');b.className=`conn-badge ${ok?'connected':'disconnected'}`;b.innerHTML=`<div class="conn-dot"></div>${ok?'Conectado':'Sin conexión'}`}
 function bump(el){if(!el)return;el.classList.remove('bumping');void el.offsetWidth;el.classList.add('bumping');el.addEventListener('animationend',()=>el.classList.remove('bumping'),{once:true})}
@@ -226,6 +233,7 @@ function makeIcon(color,size=12){
 }
 
 function makeLastPosIcon(apodo){
+  apodo=esc(apodo);
   return L.divIcon({
     className:'',
     html:`<div style="display:flex;flex-direction:column;align-items:center">
@@ -238,7 +246,7 @@ function makeLastPosIcon(apodo){
 
 function updateMapForDriver(uid,driverData){
   if(!map)return;
-  const apodo=apodos[uid]||driverData['_meta']?.userName||uid.slice(0,8);
+  const apodo=esc(apodos[uid]||driverData['_meta']?.userName||uid.slice(0,8));
   if(!mapMarkers[uid])mapMarkers[uid]={lastPos:null,deliveries:[],failed:[]};
   const m=mapMarkers[uid];
 
@@ -258,12 +266,12 @@ function updateMapForDriver(uid,driverData){
     const lat=Number(r.lat||0),lng=Number(r.lng||0);
     if(!validCoords(lat,lng))return;
     if(!lastTs||r.timestamp>lastTs){lastTs=r.timestamp;lastLat=lat;lastLng=lng}
-    const mk=L.marker([lat,lng],{icon:makeIcon('#25c490',14)})
-      .bindPopup(`<div class="popup-title green">✓ Entregado</div>
+    const mk=L.marker([lat,lng],{icon:makeIcon('#0b8a5f',14)})
+      .bindPopup(`<div class="popup-title green">✓ Entregado${partTag(r.type)}</div>
         <div class="popup-row"><span>${apodo}</span></div>
         <div class="popup-row">${zn(r.zoneKey)}</div>
         <div class="popup-row">${fmtDT(r.timestamp)}</div>
-        ${r.address?`<div class="popup-row">📍 <span>${r.address}</span></div>`:''}`)
+        ${r.address?`<div class="popup-row">📍 <span>${esc(r.address)}</span></div>`:''}`)
       .addTo(map);
     m.deliveries.push(mk);
   });
@@ -275,13 +283,13 @@ function updateMapForDriver(uid,driverData){
     if(!validCoords(lat,lng))return;
     if(!lastTs||p.timestamp>lastTs){lastTs=p.timestamp;lastLat=lat;lastLng=lng}
     const reason=(p.reasonDetail&&p.reasonDetail!=='')?p.reasonDetail:(p.reasonDisplay||p.reason||'');
-    const mk=L.marker([lat,lng],{icon:makeIcon('#f07830',14)})
-      .bindPopup(`<div class="popup-title orange">✕ No entregado</div>
+    const mk=L.marker([lat,lng],{icon:makeIcon('#d9631e',14)})
+      .bindPopup(`<div class="popup-title orange">✕ No entregado${partTag(p.type)}</div>
         <div class="popup-row"><span>${apodo}</span></div>
         <div class="popup-row">${zn(p.zoneKey)}</div>
         <div class="popup-row">${fmtDT(p.timestamp)}</div>
-        ${reason?`<div class="popup-row" style="color:#f07830">Motivo: ${reason}</div>`:''}
-        ${p.address?`<div class="popup-row">📍 <span>${p.address}</span></div>`:''}`)
+        ${reason?`<div class="popup-row" style="color:#d9631e">Motivo: ${esc(reason)}</div>`:''}
+        ${p.address?`<div class="popup-row">📍 <span>${esc(p.address)}</span></div>`:''}`)
       .addTo(map);
     m.failed.push(mk);
   });
@@ -357,23 +365,18 @@ window.openDetail=function(uid){
   });
 };
 
-// ── Apodos ────────────────────────────────────────────────────────────────────
-onValue(ref(db,'usuarios'),snap=>{
-  if(!snap.exists())return;
-  snap.forEach(c=>{apodos[c.key]=c.val().apodo||c.key});
-  updateMapDriverSelect();
-});
-
 // ── Main listener ─────────────────────────────────────────────────────────────
 onValue(ref(db,`jornadas/${todayStr()}`),snap=>{
   setConn(true);
   if(!snap.exists()){
     document.getElementById('drivers-container').innerHTML='<div class="waiting">Esperando datos de los choferes...</div>';
     ['g-delivered','g-remaining','g-failed'].forEach(id=>document.getElementById(id).textContent='0');
+    document.getElementById('g-part').style.display='none';
     return;
   }
   const data=snap.val();
   allDriverData=data;
+  Object.entries(data).forEach(([uid,d])=>{apodos[uid]=d['_meta']?.userName||uid.slice(0,8)});
   updateMapDriverSelect();
   if(mapInitialized)Object.entries(data).forEach(([uid,d])=>updateMapForDriver(uid,d));
 
@@ -386,13 +389,16 @@ onValue(ref(db,`jornadas/${todayStr()}`),snap=>{
   document.getElementById('g-delivered').textContent=gD;
   document.getElementById('g-remaining').textContent=gR;
   document.getElementById('g-failed').textContent=gF;
+  const gP=Object.values(data).reduce((n,d)=>n+partLeft(d),0),gPel=document.getElementById('g-part');
+  gPel.textContent=gP+' part';gPel.style.display=gP>0?'block':'none';
 
   const container=document.getElementById('drivers-container');
   container.innerHTML='';
   Object.entries(data).forEach(([uid,d])=>{
     const m=d['_meta']||{};
-    const apodo=apodos[uid]||m.userName||uid.slice(0,8);
+    const apodo=esc(apodos[uid]||m.userName||uid.slice(0,8));
     const delivered=m.totalDelivered||0,failed=m.totalFailed||0,remaining=m.totalRemaining||0;
+    const pl=partLeft(d);
     const isFinished=!!m.finishedAt;
     const prev=prevTotals[uid]||{};
     const didD=delivered>(prev.delivered||0),didF=failed>(prev.failed||0);
@@ -412,7 +418,7 @@ onValue(ref(db,`jornadas/${todayStr()}`),snap=>{
       <div class="driver-stats">
         <div class="driver-stat"><div class="driver-stat-num green" id="d-${uid}-d">${delivered}</div><div class="driver-stat-label">Entregados</div></div>
         <div class="driver-stat"><div class="driver-stat-num red" id="d-${uid}-f">${failed}</div><div class="driver-stat-label">No entreg.</div></div>
-        <div class="driver-stat"><div class="driver-stat-num amber" id="d-${uid}-r">${remaining}</div><div class="driver-stat-label">Restantes</div></div>
+        <div class="driver-stat"><div class="driver-stat-num amber" id="d-${uid}-r">${remaining}</div><div class="driver-stat-label">Restantes</div>${pl>0?`<div class="part-left">${pl} part</div>`:''}</div>
       </div>
       <div class="driver-hint">Tocá para ver detalle →</div>`;
     container.appendChild(card);
@@ -426,24 +432,25 @@ onValue(ref(db,`jornadas/${todayStr()}`),snap=>{
 // ── Detail render ─────────────────────────────────────────────────────────────
 function renderDetail(uid,d){
   const m=d['_meta']||{};
-  const apodo=apodos[uid]||m.userName||uid.slice(0,8);
+  const apodo=esc(apodos[uid]||m.userName||uid.slice(0,8));
   const isFinished=!!m.finishedAt;
+  const pl=partLeft(d);
   const delivered=m.totalDelivered||0,failed=m.totalFailed||0,total=m.totalPackages||0,remaining=m.totalRemaining||0;
   const pct=total>0?Math.round((delivered+failed)/total*100):0;
-  document.getElementById('detail-title').textContent=apodo;
+  document.getElementById('detail-title').innerHTML=apodo;
   document.getElementById('detail-sub').textContent=
     `${isFinished?'Finalizado':'En ruta'} · ${fmtDT(m.startedAt)}${m.finishedAt?' → '+fmtDT(m.finishedAt):''}`;
 
   const events=[];
   const dr=d['deliveredRecords']||{};
   Object.entries(dr).forEach(([id,r])=>events.push({
-    type:'delivered',zoneName:r.zoneName||zn(r.zoneKey),
+    type:'delivered',pkg:r.type||'flex',zoneName:esc(r.zoneName)||zn(r.zoneKey),
     timestamp:r.timestamp||'',address:r.address||'',reason:'',retried:false
   }));
   const fp=d['failedPackages']||{};
   Object.entries(fp).forEach(([id,p])=>{
     const reason=(p.reasonDetail&&p.reasonDetail!=='')?p.reasonDetail:(p.reasonDisplay||p.reason||'');
-    events.push({type:'failed',zoneName:p.zoneName||zn(p.zoneKey),
+    events.push({type:'failed',pkg:p.type||'flex',zoneName:esc(p.zoneName)||zn(p.zoneKey),
       timestamp:p.timestamp||'',address:p.address||'',reason,retried:p.retriedSuccess||false});
   });
   events.sort((a,b)=>a.timestamp.localeCompare(b.timestamp));
@@ -456,7 +463,7 @@ function renderDetail(uid,d){
   <div class="detail-summary">
     <div class="detail-avatar">${ini(apodo)}</div>
     <div><div class="detail-name">${apodo}</div>
-    <div class="detail-meta">${pct}% gestionado · ${total} paquetes · ${isFinished?'✅ Finalizado':'🟢 En ruta'}</div></div>
+    <div class="detail-meta">${pct}% gestionado · ${total} paquetes · ${isFinished?'✅ Finalizado':'🟢 En ruta'}${pl>0?` · <span style="color:var(--amber);font-weight:600">${pl} part restantes</span>`:''}</div></div>
   </div>
   <div class="detail-stats" style="margin-top:8px">
     <div class="detail-stat"><div class="detail-stat-num green">${delivered}</div><div class="detail-stat-label">Entregados</div></div>
@@ -467,7 +474,7 @@ function renderDetail(uid,d){
 
   if(re.length>0){
     html+=`<div class="section-title" style="margin-top:16px">Motivos de no entrega</div>`;
-    re.forEach(([r,c])=>html+=`<div class="reason-row"><span class="reason-name">${r}</span><span class="reason-count">${c}</span></div>`);
+    re.forEach(([r,c])=>html+=`<div class="reason-row"><span class="reason-name">${esc(r)}</span><span class="reason-count">${c}</span></div>`);
   }
 
   html+=`<div class="section-title" style="margin-top:16px">Paquetes · ${events.length} registros</div>`;
@@ -480,10 +487,10 @@ function renderDetail(uid,d){
       const cls=isD?'delivered':'failed';
       html+=`
       <div class="pkg ${cls}">
-        <div class="pkg-row1"><span class="pkg-status ${cls}">${statusText}</span><span class="pkg-time">${fmtDT(e.timestamp)}</span></div>
+        <div class="pkg-row1"><span class="pkg-status ${cls}">${statusText}${partTag(e.pkg)}</span><span class="pkg-time">${fmtDT(e.timestamp)}</span></div>
         <div class="pkg-zone">${e.zoneName}</div>
-        <div class="pkg-loc"><span>📍</span><span style="color:${e.address?'var(--text2)':'var(--text3)'}">${e.address||'Sin ubicación'}</span></div>
-        ${!isD&&e.reason?`<div class="pkg-reason">Motivo: ${e.reason}</div>`:''}
+        <div class="pkg-loc"><span>📍</span><span style="color:${e.address?'var(--text2)':'var(--text3)'}">${esc(e.address)||'Sin ubicación'}</span></div>
+        ${!isD&&e.reason?`<div class="pkg-reason">Motivo: ${esc(e.reason)}</div>`:''}
       </div>`;
     });
   }
