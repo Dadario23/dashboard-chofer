@@ -174,14 +174,6 @@ html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,Blin
               <select id="f-type"><option value="all">Todos</option><option value="flex">Flex</option><option value="part">Part</option></select></label>
             <label class="mf-field">Zona
               <select id="f-zone"><option value="all">Todas</option></select></label>
-            <label class="mf-field">Motivo (solo no entregados)
-              <select id="f-reason"><option value="all">Todos</option></select></label>
-            <label class="mf-field">Desde (hora)
-              <input type="time" id="f-from"></label>
-            <label class="mf-field">Hasta (hora)
-              <input type="time" id="f-to"></label>
-            <label class="mf-field wide">Dirección
-              <input type="search" id="f-q" placeholder="Calle, barrio…"></label>
           </div>
           <div><button class="mf-btn" onclick="resetFilters()">Limpiar filtros</button></div>
         </div>
@@ -251,7 +243,7 @@ let visiblePts=[];
 let openKey=null,rebuilding=false;
 const VEH={camion:'🚚',furgoneta:'🚐',auto:'🚗',moto:'🏍️',bici:'🚲'};
 const STALE_MS=10*60*1000;   // la app envía cada 3 min: 10 min sin señal = desconectado
-const F={driver:'all',live:true,delivered:true,failed:true,type:'all',zone:'all',reason:'all',from:'',to:'',q:''};
+const F={driver:'all',live:true,delivered:true,failed:true,type:'all',zone:'all'};
 
 function initMap(){
   if(mapInitialized)return;
@@ -304,15 +296,10 @@ function lastEvent(d){
   return best;
 }
 
-// Filtros aplicables a entregas y no entregados (la hora se compara sobre el texto HH:MM guardado)
-function passEvent(r,kind){
+// Filtros aplicables a entregas y no entregados
+function passEvent(r){
   if(F.type!=='all'&&(r.type||'flex')!==F.type)return false;
   if(F.zone!=='all'&&r.zoneKey!==F.zone)return false;
-  if(kind==='failed'&&F.reason!=='all'&&reasonOf(r)!==F.reason)return false;
-  const hm=(r.timestamp||'').slice(11,16);
-  if(F.from&&hm<F.from)return false;
-  if(F.to&&hm>F.to)return false;
-  if(F.q&&!(r.address||'').toLowerCase().includes(F.q))return false;
   return true;
 }
 
@@ -359,7 +346,7 @@ function renderMap(){
 
     if(F.delivered)Object.entries(d['deliveredRecords']||{}).forEach(([id,r])=>{
       const lat=Number(r.lat||0),lng=Number(r.lng||0);
-      if(!validCoords(lat,lng)||!passEvent(r,'delivered'))return;
+      if(!validCoords(lat,lng)||!passEvent(r))return;
       const key=`${uid}/d/${id}`;
       const mk=L.marker([lat,lng],{icon:makeIcon('#0b8a5f',14),key})
         .bindPopup(`<div class="popup-title green">✓ Entregado${partTag(r.type)}</div>
@@ -376,7 +363,7 @@ function renderMap(){
     if(F.failed)Object.entries(d['failedPackages']||{}).forEach(([id,p])=>{
       if(p.retriedSuccess)return;
       const lat=Number(p.lat||0),lng=Number(p.lng||0);
-      if(!validCoords(lat,lng)||!passEvent(p,'failed'))return;
+      if(!validCoords(lat,lng)||!passEvent(p))return;
       const reason=reasonOf(p);
       const key=`${uid}/f/${id}`;
       const mk=L.marker([lat,lng],{icon:makeIcon('#d9631e',14),key})
@@ -403,10 +390,9 @@ function readFilters(){
   const v=id=>document.getElementById(id);
   F.driver=v('map-driver-select').value;
   F.live=v('f-live').checked;F.delivered=v('f-delivered').checked;F.failed=v('f-failed').checked;
-  F.type=v('f-type').value;F.zone=v('f-zone').value;F.reason=v('f-reason').value;
-  F.from=v('f-from').value;F.to=v('f-to').value;F.q=v('f-q').value.trim().toLowerCase();
+  F.type=v('f-type').value;F.zone=v('f-zone').value;
   // Insignia del botón: filtros distintos del valor por defecto
-  const n=[F.driver!=='all',!F.live,!F.delivered,!F.failed,F.type!=='all',F.zone!=='all',F.reason!=='all',!!F.from,!!F.to,!!F.q].filter(Boolean).length;
+  const n=[F.driver!=='all',!F.live,!F.delivered,!F.failed,F.type!=='all',F.zone!=='all'].filter(Boolean).length;
   const b=v('mf-badge');b.textContent=n;b.style.display=n?'inline-block':'none';
 }
 
@@ -420,8 +406,7 @@ function applyMapFilter(){
 function resetFilters(){
   document.getElementById('map-driver-select').value='all';
   ['f-live','f-delivered','f-failed'].forEach(id=>document.getElementById(id).checked=true);
-  ['f-type','f-zone','f-reason'].forEach(id=>document.getElementById(id).value='all');
-  ['f-from','f-to','f-q'].forEach(id=>document.getElementById(id).value='');
+  ['f-type','f-zone'].forEach(id=>document.getElementById(id).value='all');
   applyMapFilter();
 }
 
@@ -446,16 +431,15 @@ function updateMapDriverSelect(){
   if(sel.value!==current)sel.value='all';
 }
 
-// Zonas y motivos disponibles según el chofer elegido; conserva la selección si sigue existiendo
+// Zonas disponibles según el chofer elegido; conserva la selección si sigue existiendo
 function updateFilterOptions(){
-  const zones=new Set(),reasons=new Set();
+  const zones=new Set();
   Object.entries(allDriverData).forEach(([uid,d])=>{
     if(F.driver!=='all'&&F.driver!==uid)return;
     Object.values(d['deliveredRecords']||{}).forEach(r=>r.zoneKey&&zones.add(r.zoneKey));
-    Object.values(d['failedPackages']||{}).forEach(p=>{p.zoneKey&&zones.add(p.zoneKey);reasons.add(reasonOf(p))});
+    Object.values(d['failedPackages']||{}).forEach(p=>p.zoneKey&&zones.add(p.zoneKey));
   });
   fillSelect('f-zone',[...zones].sort().map(k=>[k,ZONES[k]||k]));
-  fillSelect('f-reason',[...reasons].sort().map(r=>[r,r]));
 }
 function fillSelect(id,pairs){
   const sel=document.getElementById(id);
