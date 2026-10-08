@@ -72,14 +72,25 @@ html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,Blin
 .pkg-loc{font-size:12px;color:var(--text2);display:flex;gap:4px}.pkg-reason{font-size:12px;color:var(--orange);margin-top:4px;font-style:italic}
 /* MAP */
 #map-container{display:flex;flex-direction:column;height:100%}
-#map-filters{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0}
-#map-filter-label{font-size:12px;color:var(--text2);font-weight:600;white-space:nowrap}
-#map-driver-select{background:var(--surface2);border:1px solid var(--border);color:var(--text1);padding:7px 12px;border-radius:8px;font-size:13px;flex:1;min-width:0}
-#map-driver-select option{background:var(--surface2)}
+#map-filters{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.mf-row{display:flex;align-items:center;gap:8px}
+#map-driver-select,.mf-field select,.mf-field input{background:var(--surface2);border:1px solid var(--border);color:var(--text1);padding:7px 10px;border-radius:8px;font-size:13px;min-width:0;width:100%}
+#map-driver-select{flex:1}
+.mf-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text1);padding:7px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.mf-btn .badge{display:inline-block;min-width:16px;padding:0 5px;margin-left:6px;border-radius:99px;background:var(--green);color:#fff;font-size:10px;line-height:16px}
+#mf-panel{display:none;flex-direction:column;gap:10px;max-height:42vh;overflow-y:auto}
+#mf-panel.open{display:flex}
+.mf-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text1);background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:5px 10px;cursor:pointer}
+.mf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.mf-field{display:flex;flex-direction:column;gap:3px;font-size:11px;font-weight:600;color:var(--text2)}
+.mf-field.wide{grid-column:1/-1}
+.mf-summary{display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--text2)}
+#map-count{font-weight:700;color:var(--text1)}
 .map-legend{display:flex;align-items:center;gap:12px;margin-left:auto;flex-wrap:wrap}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2)}
 .legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.legend-dot.green{background:#0b8a5f}.legend-dot.orange{background:#d9631e}.legend-dot.blue{background:#3b82f6}
+.legend-dot.green{background:#0b8a5f}.legend-dot.orange{background:#d9631e}
 #leaflet-map{flex:1;min-height:0}
 .footer{background:var(--surface);border-top:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .footer-ts{font-size:11px;color:var(--text3);flex:1}
@@ -146,14 +157,41 @@ html,body{background:var(--bg);color:var(--text1);font-family:-apple-system,Blin
   <div id="screen-mapa" class="screen">
     <div id="map-container">
       <div id="map-filters">
-        <div id="map-filter-label">Filtrar:</div>
-        <select id="map-driver-select" onchange="applyMapFilter()">
-          <option value="all">Todos los choferes</option>
-        </select>
-        <div class="map-legend">
-          <div class="legend-item"><div class="legend-dot blue"></div>Última pos.</div>
-          <div class="legend-item"><div class="legend-dot green"></div>Entregado</div>
-          <div class="legend-item"><div class="legend-dot orange"></div>No entregado</div>
+        <div class="mf-row">
+          <select id="map-driver-select" onchange="applyMapFilter()">
+            <option value="all">Todos los choferes</option>
+          </select>
+          <button class="mf-btn" onclick="toggleFilters()">Filtros ▾<span class="badge" id="mf-badge" style="display:none"></span></button>
+        </div>
+        <div id="mf-panel" oninput="applyMapFilter()">
+          <div class="mf-chips">
+            <label class="chip"><input type="checkbox" id="f-live" checked>🚚 Posición en vivo</label>
+            <label class="chip"><input type="checkbox" id="f-delivered" checked>✓ Entregados</label>
+            <label class="chip"><input type="checkbox" id="f-failed" checked>✕ No entregados</label>
+          </div>
+          <div class="mf-grid">
+            <label class="mf-field">Tipo
+              <select id="f-type"><option value="all">Todos</option><option value="flex">Flex</option><option value="part">Part</option></select></label>
+            <label class="mf-field">Zona
+              <select id="f-zone"><option value="all">Todas</option></select></label>
+            <label class="mf-field">Motivo (solo no entregados)
+              <select id="f-reason"><option value="all">Todos</option></select></label>
+            <label class="mf-field">Desde (hora)
+              <input type="time" id="f-from"></label>
+            <label class="mf-field">Hasta (hora)
+              <input type="time" id="f-to"></label>
+            <label class="mf-field wide">Dirección
+              <input type="search" id="f-q" placeholder="Calle, barrio…"></label>
+          </div>
+          <div><button class="mf-btn" onclick="resetFilters()">Limpiar filtros</button></div>
+        </div>
+        <div class="mf-summary">
+          <span id="map-count"></span>
+          <div class="map-legend">
+            <div class="legend-item"><span style="font-size:13px;line-height:1">🚚</span>Posición</div>
+            <div class="legend-item"><div class="legend-dot green"></div>Entregado</div>
+            <div class="legend-item"><div class="legend-dot orange"></div>No entregado</div>
+          </div>
         </div>
       </div>
       <div id="leaflet-map"></div>
@@ -189,7 +227,7 @@ function fmtTime(iso){if(!iso)return '';return new Date(iso).toLocaleTimeString(
 function fmtDT(iso){if(!iso)return '';return new Date(iso).toLocaleString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function zn(k){return esc(ZONES[k]||k||'—')}
-const NON_ZONE=['_meta','_inicio','deliveredRecords','failedPackages'];
+const NON_ZONE=['_meta','_inicio','_live','deliveredRecords','failedPackages'];
 // Part que le faltan a un chofer: suma de las zonas (total − entregados − fallidos de tipo Part)
 function partLeft(d){return Object.entries(d||{}).reduce((n,[k,z])=>NON_ZONE.includes(k)||typeof z!=='object'?n:n+Math.max(0,(z.partTotal||0)-(z.partDelivered||0)-(z.partFailed||0)),0)}
 function partTag(t){return t==='part'?'<span class="tag-part">PART</span>':''}
@@ -204,24 +242,27 @@ let allDriverData={};
 let currentUid=null;
 let detailUnsub=null;
 let currentTab='reparto';
-let currentMapFilter='all';
 
 // ── Leaflet ───────────────────────────────────────────────────────────────────
 let map=null;
 let mapInitialized=false;
-const mapMarkers={};  // uid -> {lastPos, deliveries:[], failed:[]}
+let liveLayer=null,evLayer=null;
+let visiblePts=[];
+let openKey=null,rebuilding=false;
+const VEH={camion:'🚚',furgoneta:'🚐',auto:'🚗',moto:'🏍️',bici:'🚲'};
+const STALE_MS=10*60*1000;   // la app envía cada 3 min: 10 min sin señal = desconectado
+const F={driver:'all',live:true,delivered:true,failed:true,type:'all',zone:'all',reason:'all',from:'',to:'',q:''};
 
 function initMap(){
   if(mapInitialized)return;
   mapInitialized=true;
-  // Add pulse animation style
-  const s=document.createElement('style');
-  s.textContent=`@keyframes pulse-map{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.6)}50%{box-shadow:0 0 0 8px rgba(59,130,246,0)}}`;
-  document.head.appendChild(s);
-
   map=L.map('leaflet-map',{zoomControl:true}).setView([-34.65,-58.55],11);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
-  Object.entries(allDriverData).forEach(([uid,d])=>updateMapForDriver(uid,d));
+  liveLayer=L.layerGroup().addTo(map);
+  evLayer=L.layerGroup().addTo(map);
+  map.on('popupopen',e=>{openKey=e.popup._source?.options.key||null});
+  map.on('popupclose',()=>{if(!rebuilding)openKey=null});
+  renderMap();
 }
 
 function makeIcon(color,size=12){
@@ -232,93 +273,164 @@ function makeIcon(color,size=12){
   });
 }
 
-function makeLastPosIcon(apodo){
-  apodo=esc(apodo);
+// Vehículo con el nombre encima, apoyado 10px arriba del punto para no tapar marcadores de entrega
+function makeVehicleIcon(emoji,label,dim){
   return L.divIcon({
     className:'',
-    html:`<div style="display:flex;flex-direction:column;align-items:center">
-      <div style="width:16px;height:16px;border-radius:50%;background:#3b82f6;border:3px solid white;box-shadow:0 0 0 4px rgba(59,130,246,.3);animation:pulse-map 2s ease-in-out infinite"></div>
-      <div style="background:rgba(0,0,0,.8);color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;margin-top:3px;white-space:nowrap">${apodo}</div>
+    html:`<div style="display:flex;flex-direction:column;align-items:center;opacity:${dim?.55:1}">
+      <div style="background:rgba(0,0,0,.8);color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap">${label}</div>
+      <div style="font-size:24px;line-height:26px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))">${emoji}</div>
     </div>`,
-    iconSize:[80,40],iconAnchor:[40,8]
+    iconSize:[120,44],iconAnchor:[60,54]
   });
 }
 
-function updateMapForDriver(uid,driverData){
-  if(!map)return;
-  const apodo=esc(apodos[uid]||driverData['_meta']?.userName||uid.slice(0,8));
-  if(!mapMarkers[uid])mapMarkers[uid]={lastPos:null,deliveries:[],failed:[]};
-  const m=mapMarkers[uid];
+function fmtAge(ms){
+  const m=Math.floor(ms/60000);
+  if(m<1)return 'hace instantes';
+  if(m<60)return `hace ${m} min`;
+  return `hace ${Math.floor(m/60)} h ${m%60} min`;
+}
 
-  // Clear old markers
-  if(m.lastPos){map.removeLayer(m.lastPos);m.lastPos=null}
-  m.deliveries.forEach(mk=>map.removeLayer(mk));m.deliveries=[];
-  m.failed.forEach(mk=>map.removeLayer(mk));m.failed=[];
+function reasonOf(p){return (p.reasonDetail&&p.reasonDetail!=='')?p.reasonDetail:(p.reasonDisplay||p.reason||'Sin motivo')}
 
-  const show=currentMapFilter==='all'||currentMapFilter===uid;
-  if(!show)return;
-
-  let lastLat=0,lastLng=0,lastTs='';
-
-  // Delivered — green markers using lat/lng directly
-  const dr=driverData['deliveredRecords']||{};
-  Object.entries(dr).forEach(([id,r])=>{
+// Último paquete registrado (respaldo cuando la app no envía posición en vivo)
+function lastEvent(d){
+  let best=null;
+  [d['deliveredRecords'],d['failedPackages']].forEach(g=>Object.values(g||{}).forEach(r=>{
     const lat=Number(r.lat||0),lng=Number(r.lng||0);
-    if(!validCoords(lat,lng))return;
-    if(!lastTs||r.timestamp>lastTs){lastTs=r.timestamp;lastLat=lat;lastLng=lng}
-    const mk=L.marker([lat,lng],{icon:makeIcon('#0b8a5f',14)})
-      .bindPopup(`<div class="popup-title green">✓ Entregado${partTag(r.type)}</div>
-        <div class="popup-row"><span>${apodo}</span></div>
-        <div class="popup-row">${zn(r.zoneKey)}</div>
-        <div class="popup-row">${fmtDT(r.timestamp)}</div>
-        ${r.address?`<div class="popup-row">📍 <span>${esc(r.address)}</span></div>`:''}`)
-      .addTo(map);
-    m.deliveries.push(mk);
+    if(validCoords(lat,lng)&&(!best||r.timestamp>best.ts))best={lat,lng,ts:r.timestamp};
+  }));
+  return best;
+}
+
+// Filtros aplicables a entregas y no entregados (la hora se compara sobre el texto HH:MM guardado)
+function passEvent(r,kind){
+  if(F.type!=='all'&&(r.type||'flex')!==F.type)return false;
+  if(F.zone!=='all'&&r.zoneKey!==F.zone)return false;
+  if(kind==='failed'&&F.reason!=='all'&&reasonOf(r)!==F.reason)return false;
+  const hm=(r.timestamp||'').slice(11,16);
+  if(F.from&&hm<F.from)return false;
+  if(F.to&&hm>F.to)return false;
+  if(F.q&&!(r.address||'').toLowerCase().includes(F.q))return false;
+  return true;
+}
+
+function renderLive(){
+  if(!map)return;
+  liveLayer.clearLayers();
+  if(!F.live)return;
+  Object.entries(allDriverData).forEach(([uid,d])=>{
+    if(F.driver!=='all'&&F.driver!==uid)return;
+    const apodo=esc(apodos[uid]||d['_meta']?.userName||uid.slice(0,8));
+    const live=d['_live'];
+    const isLive=live&&typeof live.ts==='number'&&validCoords(live.lat,live.lng);
+    let lat,lng,age,emoji,note='';
+    if(isLive){
+      lat=live.lat;lng=live.lng;age=Date.now()-live.ts;emoji=VEH[live.vehicle]||VEH.camion;
+    }else{
+      const le=lastEvent(d);
+      if(!le)return;
+      lat=le.lat;lng=le.lng;age=null;emoji=VEH.camion;note='Último paquete registrado (sin GPS en vivo)';
+    }
+    const finished=!!d['_meta']?.finishedAt;
+    const stale=isLive&&age>STALE_MS;
+    const status=finished?'Jornada finalizada':(stale?'Sin señal':(isLive?'En vivo':''));
+    const label=apodo+(isLive?` · ${fmtAge(age)}`:' · últ. paquete');
+    L.marker([lat,lng],{icon:makeVehicleIcon(emoji,label,finished||stale||!isLive),zIndexOffset:-500})
+      .bindPopup(`<div class="popup-title blue">${emoji} ${apodo}</div>
+        ${status?`<div class="popup-row"><span>${status}</span></div>`:''}
+        ${isLive?`<div class="popup-row">Posición ${fmtAge(age)}</div>`:`<div class="popup-row">${note}</div>`}`)
+      .addTo(liveLayer);
+    visiblePts.push([lat,lng]);
+  });
+}
+
+function renderMap(){
+  if(!map)return;
+  rebuilding=true;
+  evLayer.clearLayers();
+  visiblePts=[];
+  let nD=0,nF=0,reopen=null;
+
+  Object.entries(allDriverData).forEach(([uid,d])=>{
+    if(F.driver!=='all'&&F.driver!==uid)return;
+    const apodo=esc(apodos[uid]||d['_meta']?.userName||uid.slice(0,8));
+
+    if(F.delivered)Object.entries(d['deliveredRecords']||{}).forEach(([id,r])=>{
+      const lat=Number(r.lat||0),lng=Number(r.lng||0);
+      if(!validCoords(lat,lng)||!passEvent(r,'delivered'))return;
+      const key=`${uid}/d/${id}`;
+      const mk=L.marker([lat,lng],{icon:makeIcon('#0b8a5f',14),key})
+        .bindPopup(`<div class="popup-title green">✓ Entregado${partTag(r.type)}</div>
+          <div class="popup-row"><span>${apodo}</span></div>
+          <div class="popup-row">${zn(r.zoneKey)}</div>
+          <div class="popup-row">${fmtDT(r.timestamp)}</div>
+          ${r.address?`<div class="popup-row">📍 <span>${esc(r.address)}</span></div>`:''}`)
+        .addTo(evLayer);
+      if(key===openKey)reopen=mk;
+      visiblePts.push([lat,lng]);nD++;
+    });
+
+    // Un no entregado reintentado con éxito ya figura como entregado (registro "_retry")
+    if(F.failed)Object.entries(d['failedPackages']||{}).forEach(([id,p])=>{
+      if(p.retriedSuccess)return;
+      const lat=Number(p.lat||0),lng=Number(p.lng||0);
+      if(!validCoords(lat,lng)||!passEvent(p,'failed'))return;
+      const reason=reasonOf(p);
+      const key=`${uid}/f/${id}`;
+      const mk=L.marker([lat,lng],{icon:makeIcon('#d9631e',14),key})
+        .bindPopup(`<div class="popup-title orange">✕ No entregado${partTag(p.type)}</div>
+          <div class="popup-row"><span>${apodo}</span></div>
+          <div class="popup-row">${zn(p.zoneKey)}</div>
+          <div class="popup-row">${fmtDT(p.timestamp)}</div>
+          <div class="popup-row" style="color:#d9631e">Motivo: ${esc(reason)}</div>
+          ${p.address?`<div class="popup-row">📍 <span>${esc(p.address)}</span></div>`:''}`)
+        .addTo(evLayer);
+      if(key===openKey)reopen=mk;
+      visiblePts.push([lat,lng]);nF++;
+    });
   });
 
-  // Failed — orange markers using lat/lng directly
-  const fp=driverData['failedPackages']||{};
-  Object.entries(fp).forEach(([id,p])=>{
-    const lat=Number(p.lat||0),lng=Number(p.lng||0);
-    if(!validCoords(lat,lng))return;
-    if(!lastTs||p.timestamp>lastTs){lastTs=p.timestamp;lastLat=lat;lastLng=lng}
-    const reason=(p.reasonDetail&&p.reasonDetail!=='')?p.reasonDetail:(p.reasonDisplay||p.reason||'');
-    const mk=L.marker([lat,lng],{icon:makeIcon('#d9631e',14)})
-      .bindPopup(`<div class="popup-title orange">✕ No entregado${partTag(p.type)}</div>
-        <div class="popup-row"><span>${apodo}</span></div>
-        <div class="popup-row">${zn(p.zoneKey)}</div>
-        <div class="popup-row">${fmtDT(p.timestamp)}</div>
-        ${reason?`<div class="popup-row" style="color:#d9631e">Motivo: ${esc(reason)}</div>`:''}
-        ${p.address?`<div class="popup-row">📍 <span>${esc(p.address)}</span></div>`:''}`)
-      .addTo(map);
-    m.failed.push(mk);
-  });
+  renderLive();
+  rebuilding=false;
+  if(reopen)reopen.openPopup();
+  const nLive=liveLayer.getLayers().length;
+  document.getElementById('map-count').textContent=`${nLive} chofer${nLive===1?'':'es'} · ✓ ${nD} · ✕ ${nF}`;
+}
 
-  // Last position — blue pulsing marker
-  if(validCoords(lastLat,lastLng)){
-    m.lastPos=L.marker([lastLat,lastLng],{icon:makeLastPosIcon(apodo),zIndexOffset:1000})
-      .bindPopup(`<div class="popup-title blue">📍 Última posición</div>
-        <div class="popup-row"><span>${apodo}</span></div>
-        <div class="popup-row" style="color:var(--text2)">${fmtDT(lastTs)}</div>`)
-      .addTo(map);
-  }
+function readFilters(){
+  const v=id=>document.getElementById(id);
+  F.driver=v('map-driver-select').value;
+  F.live=v('f-live').checked;F.delivered=v('f-delivered').checked;F.failed=v('f-failed').checked;
+  F.type=v('f-type').value;F.zone=v('f-zone').value;F.reason=v('f-reason').value;
+  F.from=v('f-from').value;F.to=v('f-to').value;F.q=v('f-q').value.trim().toLowerCase();
+  // Insignia del botón: filtros distintos del valor por defecto
+  const n=[F.driver!=='all',!F.live,!F.delivered,!F.failed,F.type!=='all',F.zone!=='all',F.reason!=='all',!!F.from,!!F.to,!!F.q].filter(Boolean).length;
+  const b=v('mf-badge');b.textContent=n;b.style.display=n?'inline-block':'none';
 }
 
 function applyMapFilter(){
-  currentMapFilter=document.getElementById('map-driver-select').value;
-  Object.entries(allDriverData).forEach(([uid,d])=>updateMapForDriver(uid,d));
+  readFilters();
+  updateFilterOptions();
+  renderMap();
   fitMapToVisible();
 }
 
+function resetFilters(){
+  document.getElementById('map-driver-select').value='all';
+  ['f-live','f-delivered','f-failed'].forEach(id=>document.getElementById(id).checked=true);
+  ['f-type','f-zone','f-reason'].forEach(id=>document.getElementById(id).value='all');
+  ['f-from','f-to','f-q'].forEach(id=>document.getElementById(id).value='');
+  applyMapFilter();
+}
+
+function toggleFilters(){document.getElementById('mf-panel').classList.toggle('open')}
+Object.assign(window,{applyMapFilter,resetFilters,toggleFilters});
+
 function fitMapToVisible(){
-  if(!map)return;
-  const all=[];
-  Object.values(mapMarkers).forEach(m=>{
-    if(m.lastPos)all.push(m.lastPos.getLatLng());
-    m.deliveries.forEach(mk=>all.push(mk.getLatLng()));
-    m.failed.forEach(mk=>all.push(mk.getLatLng()));
-  });
-  if(all.length>0)map.fitBounds(L.latLngBounds(all).pad(0.15));
+  if(!map||visiblePts.length===0)return;
+  map.fitBounds(L.latLngBounds(visiblePts).pad(0.25),{maxZoom:16});
 }
 
 function updateMapDriverSelect(){
@@ -331,7 +443,34 @@ function updateMapDriverSelect(){
     sel.appendChild(opt);
   });
   sel.value=current||'all';
+  if(sel.value!==current)sel.value='all';
 }
+
+// Zonas y motivos disponibles según el chofer elegido; conserva la selección si sigue existiendo
+function updateFilterOptions(){
+  const zones=new Set(),reasons=new Set();
+  Object.entries(allDriverData).forEach(([uid,d])=>{
+    if(F.driver!=='all'&&F.driver!==uid)return;
+    Object.values(d['deliveredRecords']||{}).forEach(r=>r.zoneKey&&zones.add(r.zoneKey));
+    Object.values(d['failedPackages']||{}).forEach(p=>{p.zoneKey&&zones.add(p.zoneKey);reasons.add(reasonOf(p))});
+  });
+  fillSelect('f-zone',[...zones].sort().map(k=>[k,ZONES[k]||k]));
+  fillSelect('f-reason',[...reasons].sort().map(r=>[r,r]));
+}
+function fillSelect(id,pairs){
+  const sel=document.getElementById(id);
+  const sig=pairs.map(p=>p[0]).join('|');
+  if(sel.dataset.sig===sig)return;
+  const cur=sel.value;
+  while(sel.options.length>1)sel.remove(1);
+  pairs.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o)});
+  sel.value=pairs.some(p=>p[0]===cur)?cur:'all';
+  sel.dataset.sig=sig;
+  readFilters();
+}
+
+// La antigüedad de la posición ("hace 4 min") se refresca sin esperar a Firebase
+setInterval(()=>{if(mapInitialized&&currentTab==='mapa')renderLive()},60000);
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────
 window.switchTab=function(tab){
@@ -378,7 +517,8 @@ onValue(ref(db,`jornadas/${todayStr()}`),snap=>{
   allDriverData=data;
   Object.entries(data).forEach(([uid,d])=>{apodos[uid]=d['_meta']?.userName||uid.slice(0,8)});
   updateMapDriverSelect();
-  if(mapInitialized)Object.entries(data).forEach(([uid,d])=>updateMapForDriver(uid,d));
+  updateFilterOptions();
+  if(mapInitialized)renderMap();
 
   let gD=0,gF=0,gR=0,latestTs='';
   Object.entries(data).forEach(([uid,d])=>{
